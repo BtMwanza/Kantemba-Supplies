@@ -1,47 +1,116 @@
 <template>
-  <view class="container">
-    <!-- Heading -->
-    <view>
-      <text class="heading">Welcome</text>
+  <nb-container :style="{ backgroundColor: '#fff' }">
+    <nb-content padder>
+      <view v-if="loaded" :style="{ margin: 10 }">
+        <view>
+          <text class="heading">Welcome back</text>
+        </view>
+
+        <!-- Form -->
+        <nb-form :style="{ margin: 10 }">
+          <nb-item
+            last
+            :error="
+              (!$v.emailValue.required || !$v.emailValue.email) &&
+              $v.emailValue.$dirty
+            "
+          >
+            <nb-input
+              placeholder="Email"
+              v-model="emailValue"
+              auto-capitalize="none"
+              :on-blur="() => $v.emailValue.$touch()"
+            />
+          </nb-item>
+
+          <nb-item last :error="!$v.password.required && $v.password.$dirty">
+            <nb-input
+              placeholder="Password"
+              v-model="password"
+              auto-capitalize="none"
+              secure-text-entry
+              :on-blur="() => $v.password.$touch()"
+            />
+          </nb-item>
+        </nb-form>
+        <view :style="{ margin: 10 }">
+          <nb-button block :on-press="login">
+            <nb-spinner v-if="logging_in" size="small" />
+            <nb-text>Login </nb-text>
+          </nb-button>
+        </view>
+
+        <view :style="{ margin: 10 }">
+          <touchable-opacity :on-press="register">
+            <text class="text">
+              Don't have an account?
+              <text
+                :style="{
+                  fontWeight: '500',
+                  color: 'blue',
+                }"
+                >Sign Up</text
+              ></text
+            >
+          </touchable-opacity>
+        </view>
+      </view>
+    </nb-content>
+
+    <view class="container" v-if="!loaded">
+      <nb-text>Loading</nb-text>
+      <activity-indicator size="large" color="#0000ff" />
     </view>
-
-    <!-- Form -->
-    <view>
-      <text-input
-        class="textInput"
-        v-model="email"
-        placeholder="Email"
-        auto-capitalize="none"
-      />
-
-      <text-input
-        class="textInput"
-        v-model="password"
-        placeholder="Password"
-        auto-capitalize="none"
-        secure-text-entry
-        :on-blur="() => $v.password.$touch()"
-      />
-    </view>
-    <touchable-opacity class="btn" :on-press="goToHomeScreen">
-      <text class="btn-text">Login</text>
-    </touchable-opacity>
-
-    <text>Or</text>
-
-    <touchable-opacity class="btn" :on-press="register">
-      <text class="btn-text">Sign Up</text>
-    </touchable-opacity>
-  </view>
+  </nb-container>
 </template>
 
 <script>
+import React from "react";
+import firebase from "firebase";
+import { Toast } from "native-base";
+import Fire from "./../../api/firebaseAPI";
+import store from "./../../store";
+import { required, email } from "vuelidate/lib/validators";
+import { Alert, AsyncStorage } from "react-native";
+
 export default {
   // Declare `navigation` as a prop
   props: {
     navigation: {
       type: Object,
     },
+  },
+  data: function () {
+    return {
+      emailValue: "",
+      password: "",
+      loaded: false,
+    };
+  },
+  validations: {
+    emailValue: {
+      required,
+      email,
+    },
+    password: {
+      required,
+    },
+  },
+  computed: {
+    logging_in() {
+      return store.state.logging_in;
+    },
+  },
+  created() {
+    AsyncStorage.getItem("email").then((val) => {
+      if (val) {
+        this.loaded = true;
+        this.navigation.navigate("Home");
+        store.dispatch("SET_USER", { userObj: { email: val } });
+      } else {
+        this.loaded = true;
+      }
+    });
   },
   methods: {
     goToHomeScreen() {
@@ -50,12 +119,19 @@ export default {
     register() {
       this.navigation.navigate("Register");
     },
-  },
-  data() {
-    return {
-      email: "",
-      password: "",
-    };
+    login() {
+      if (this.emailValue && this.password && !this.$v.emailValue.$invalid) {
+        firebase
+          .auth()
+          .signInWithemailValueAndPassword(emailValue.trim(), password)
+          .catch((error) => Alert.alert(error));
+      } else {
+        Toast.show({
+          text: "Invalid emailValue or Password",
+          buttonText: "Okay",
+        });
+      }
+    },
   },
 };
 </script>
@@ -65,42 +141,18 @@ export default {
   align-items: center;
   justify-content: center;
   flex: 1;
-  padding: 50px;
+  margin-bottom: 180px;
 }
 .heading {
   font-size: 30px;
   font-weight: bold;
   color: rgb(0, 0, 0);
-  margin-top: 10px;
+  margin-top: 70px;
   margin-bottom: 80px;
+  text-align: center;
 }
 .text {
   text-align: center;
   margin: 10px;
-}
-.textInput {
-  margin: 10px;
-  font-size: 18px;
-  height: 50px;
-  width: 320px;
-  border-color: gray;
-  border-width: 1px;
-  border-radius: 15px;
-}
-.btn {
-  background-color: #40e0d0;
-  border-radius: 4px;
-  height: 52px;
-  align-items: center;
-  justify-content: center;
-  margin: 10px;
-}
-.btn-text {
-  font-size: 16px;
-  text-align: center;
-  margin: 10px;
-  font-weight: 600;
-  padding-left: 60px;
-  padding-right: 60px;
 }
 </style>

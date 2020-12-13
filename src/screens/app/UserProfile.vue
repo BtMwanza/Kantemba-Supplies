@@ -1,7 +1,12 @@
 <template>
-  <view class="container">
+  <nb-container>
+    <nb-header>
+      <nb-body>
+        <nb-title>{{ shopName }}</nb-title>
+      </nb-body>
+    </nb-header>
     <view>
-      <text class="heading">{{ shopName }}</text>
+      <text class="heading"></text>
     </view>
     <view class="inside-container1">
       <view class="avatar">
@@ -23,17 +28,18 @@
     </view>
     <view class="inside-container2">
       <view class="more-info">
-        <text class="label"></text>
+        <text class="label">Address</text>
         <text class="text">{{ address }}</text>
 
-        <text class="label"></text>
+        <text class="label">City</text>
         <text class="text">{{ city }}</text>
       </view>
     </view>
-  </view>
+  </nb-container>
 </template>
 
 <script>
+import React from "react";
 export default {
   // Declare `navigation` as a prop
   props: {
@@ -43,11 +49,11 @@ export default {
   },
   data() {
     return {
-      shopName: "The Discovery",
+      shopName: "Earth-Clan Shop",
       firstName: "Vue",
       lastName: "Developer",
       otherName: "",
-      address: "123 Kolony Street",
+      address: "123 Ba Sing Se Street",
       city: "Lusaka",
     };
   },
@@ -67,10 +73,8 @@ export default {
 }
 .inside-container1 {
   margin-top: 2px;
-  flex: 1;
+  flex: 0.41;
   flex-direction: row;
-  border-color: brown;
-  border-width: 2px;
   justify-content: space-between;
 }
 .inside-container2 {
@@ -82,19 +86,28 @@ export default {
   border-color: aquamarine;
   border-width: 1px;
   align-items: center;
+  margin-left: 25px;
+  margin-right: 25px;
 }
 .info {
   align-items: center;
+  margin-left: 25px;
+  margin-right: 25px;
 }
 .heading {
   font-size: 30px;
   font-weight: bold;
-  color: darkolivegreen;
+  color: black;
   margin: 10px;
 }
 .text {
   text-align: center;
-  margin: 10px;
+  margin: 5px;
   font-size: 18px;
+}
+.label {
+  color: grey;
+  text-align: center;
+  font-size: 12px;
 }
 </style>

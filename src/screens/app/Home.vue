@@ -1,97 +1,95 @@
 <template>
-  <scroll-view
-    :content-container-style="{
-      contentContainer: {
-        paddingVertical: 20,
-        alignItems: 'center',
-        justifyContent: 'center',
-        flex: 1,
-      },
-    }"
-  >
-    <!-- Content goes here -->
+  <nb-container>
+    <nb-header>
+      <nb-body>
+        <nb-title>Home</nb-title>
+      </nb-body>
+    </nb-header>
 
-    <view class="products" v-for="product in products" :key="product.id">
-      <touchable-opacity class="product-display" :on-press="() => {}">
-        <image
-          :style="{ width: 150, height: 150, margin: 1 }"
-          :source="{ uri: product.thumbnailUrl }"
-        />
-        <text>{{ product.title }}</text>
-      </touchable-opacity>
-    </view>
-  </scroll-view>
+    <nb-content class="products">
+      <!-- Content goes here -->
+
+      <view v-for="product in products" :key="product.id">
+        <touchable-opacity class="product-display" :on-press="() => {}">
+          <view>
+            <image
+              :style="{ width: 150, height: 150 }"
+              :resizeMode="contain"
+              :source="{ uri: product.thumbnailUrl }"
+            />
+            <text class="text">{{ product.title }}</text>
+            <text class="text">{{ product.price }}</text>
+          </view>
+        </touchable-opacity>
+      </view>
+    </nb-content>
+  </nb-container>
 </template>
 
 <script>
 import React from "react";
 import { Text } from "react-native";
 import axios from "axios";
+import { Font } from "expo";
 
 export default {
-  // Dummy JSON data
-  /* mounted() {
-    fetch("https://jsonplaceholder.typicode.com/photos").then(
-      (res) => (this.products = res.data)
-    );
-  }, */
+  mounted() {},
   data() {
     return {
       products: [
         {
           albumId: 1,
           id: 1,
-          title: "accusamus beatae ad facilis cum similique qui sunt",
+          title: "accusamus beatae ",
           url: "https://via.placeholder.com/600/92c952",
           thumbnailUrl: "https://via.placeholder.com/150/92c952",
         },
         {
           albumId: 1,
           id: 2,
-          title: "reprehenderit est deserunt velit ipsam",
+          title: "reprehenderit",
           url: "https://via.placeholder.com/600/771796",
           thumbnailUrl: "https://via.placeholder.com/150/771796",
         },
         {
           albumId: 1,
           id: 3,
-          title: "officia porro iure quia iusto qui ipsa ut modi",
+          title: "officia ",
           url: "https://via.placeholder.com/600/24f355",
           thumbnailUrl: "https://via.placeholder.com/150/24f355",
         },
         {
           albumId: 1,
           id: 4,
-          title: "culpa odio esse rerum omnis laboriosam voluptate repudiandae",
+          title: "culpa ",
           url: "https://via.placeholder.com/600/d32776",
           thumbnailUrl: "https://via.placeholder.com/150/d32776",
         },
         {
           albumId: 1,
           id: 5,
-          title: "natus nisi omnis corporis facere molestiae rerum in",
+          title: "natus nisi",
           url: "https://via.placeholder.com/600/f66b97",
           thumbnailUrl: "https://via.placeholder.com/150/f66b97",
         },
         {
           albumId: 1,
           id: 6,
-          title: "accusamus ea aliquid et amet sequi nemo",
+          title: "accusamus ",
           url: "https://via.placeholder.com/600/56a8c2",
           thumbnailUrl: "https://via.placeholder.com/150/56a8c2",
         },
         {
           albumId: 1,
           id: 7,
-          title:
-            "officia delectus consequatur vero aut veniam explicabo molestias",
+          title: "officia delectus ",
           url: "https://via.placeholder.com/600/b0f7cc",
           thumbnailUrl: "https://via.placeholder.com/150/b0f7cc",
         },
         {
           albumId: 1,
           id: 8,
-          title: "aut porro officiis laborum odit ea laudantium corporis",
+          title: "aut porro officiis ",
           url: "https://via.placeholder.com/600/54176f",
           thumbnailUrl: "https://via.placeholder.com/150/54176f",
         },
@@ -105,225 +103,79 @@ export default {
         {
           albumId: 1,
           id: 10,
-          title: "beatae et provident et ut vel",
+          title: "beatae et ",
           url: "https://via.placeholder.com/600/810b14",
           thumbnailUrl: "https://via.placeholder.com/150/810b14",
         },
         {
           albumId: 1,
           id: 11,
-          title: "nihil at amet non hic quia qui",
+          title: "nihil at ",
           url: "https://via.placeholder.com/600/1ee8a4",
           thumbnailUrl: "https://via.placeholder.com/150/1ee8a4",
         },
         {
           albumId: 1,
           id: 12,
-          title:
-            "mollitia soluta ut rerum eos aliquam consequatur perspiciatis maiores",
+          title: "mollitia soluta ut",
           url: "https://via.placeholder.com/600/66b7d2",
           thumbnailUrl: "https://via.placeholder.com/150/66b7d2",
         },
         {
           albumId: 1,
           id: 13,
-          title: "repudiandae iusto deleniti rerum",
+          title: "repudiandae iusto ",
           url: "https://via.placeholder.com/600/197d29",
           thumbnailUrl: "https://via.placeholder.com/150/197d29",
         },
         {
           albumId: 1,
           id: 14,
-          title: "est necessitatibus architecto ut laborum",
+          title: "est necessitatibus",
           url: "https://via.placeholder.com/600/61a65",
           thumbnailUrl: "https://via.placeholder.com/150/61a65",
         },
         {
           albumId: 1,
           id: 15,
-          title: "harum dicta similique quis dolore earum ex qui",
+          title: "harum dicta similique",
           url: "https://via.placeholder.com/600/f9cee5",
           thumbnailUrl: "https://via.placeholder.com/150/f9cee5",
         },
         {
           albumId: 1,
           id: 16,
-          title:
-            "iusto sunt nobis quasi veritatis quas expedita voluptatum deserunt",
+          title: "iusto sunt nobis quasi ",
           url: "https://via.placeholder.com/600/fdf73e",
           thumbnailUrl: "https://via.placeholder.com/150/fdf73e",
         },
         {
           albumId: 1,
           id: 17,
-          title: "natus doloribus necessitatibus ipsa",
+          title: "natus doloribus",
           url: "https://via.placeholder.com/600/9c184f",
           thumbnailUrl: "https://via.placeholder.com/150/9c184f",
         },
         {
           albumId: 1,
           id: 18,
-          title:
-            "laboriosam odit nam necessitatibus et illum dolores reiciendis",
+          title: "laboriosam odit nam",
           url: "https://via.placeholder.com/600/1fe46f",
           thumbnailUrl: "https://via.placeholder.com/150/1fe46f",
         },
         {
           albumId: 1,
           id: 19,
-          title: "perferendis nesciunt eveniet et optio a",
+          title: "perferendis ",
           url: "https://via.placeholder.com/600/56acb2",
           thumbnailUrl: "https://via.placeholder.com/150/56acb2",
         },
         {
           albumId: 1,
           id: 20,
-          title:
-            "assumenda voluptatem laboriosam enim consequatur veniam placeat reiciendis error",
+          title: "assumenda voluptatem",
           url: "https://via.placeholder.com/600/8985dc",
           thumbnailUrl: "https://via.placeholder.com/150/8985dc",
-        },
-        {
-          albumId: 1,
-          id: 21,
-          title: "ad et natus qui",
-          url: "https://via.placeholder.com/600/5e12c6",
-          thumbnailUrl: "https://via.placeholder.com/150/5e12c6",
-        },
-        {
-          albumId: 1,
-          id: 22,
-          title: "et ea illo et sit voluptas animi blanditiis porro",
-          url: "https://via.placeholder.com/600/45601a",
-          thumbnailUrl: "https://via.placeholder.com/150/45601a",
-        },
-        {
-          albumId: 1,
-          id: 23,
-          title: "harum velit vero totam",
-          url: "https://via.placeholder.com/600/e924e6",
-          thumbnailUrl: "https://via.placeholder.com/150/e924e6",
-        },
-        {
-          albumId: 1,
-          id: 24,
-          title: "beatae officiis ut aut",
-          url: "https://via.placeholder.com/600/8f209a",
-          thumbnailUrl: "https://via.placeholder.com/150/8f209a",
-        },
-        {
-          albumId: 1,
-          id: 25,
-          title: "facere non quis fuga fugit vitae",
-          url: "https://via.placeholder.com/600/5e3a73",
-          thumbnailUrl: "https://via.placeholder.com/150/5e3a73",
-        },
-        {
-          albumId: 1,
-          id: 26,
-          title: "asperiores nobis voluptate qui",
-          url: "https://via.placeholder.com/600/474645",
-          thumbnailUrl: "https://via.placeholder.com/150/474645",
-        },
-        {
-          albumId: 1,
-          id: 27,
-          title: "sit asperiores est quos quis nisi veniam error",
-          url: "https://via.placeholder.com/600/c984bf",
-          thumbnailUrl: "https://via.placeholder.com/150/c984bf",
-        },
-        {
-          albumId: 1,
-          id: 28,
-          title:
-            "non neque eligendi molestiae repudiandae illum voluptatem qui aut",
-          url: "https://via.placeholder.com/600/392537",
-          thumbnailUrl: "https://via.placeholder.com/150/392537",
-        },
-        {
-          albumId: 1,
-          id: 29,
-          title: "aut ipsam quos ab placeat omnis",
-          url: "https://via.placeholder.com/600/602b9e",
-          thumbnailUrl: "https://via.placeholder.com/150/602b9e",
-        },
-        {
-          albumId: 1,
-          id: 30,
-          title: "odio enim voluptatem quidem aut nihil illum",
-          url: "https://via.placeholder.com/600/372c93",
-          thumbnailUrl: "https://via.placeholder.com/150/372c93",
-        },
-        {
-          albumId: 1,
-          id: 31,
-          title: "voluptate voluptates sequi",
-          url: "https://via.placeholder.com/600/a7c272",
-          thumbnailUrl: "https://via.placeholder.com/150/a7c272",
-        },
-        {
-          albumId: 1,
-          id: 32,
-          title: "ad enim dignissimos voluptatem similique",
-          url: "https://via.placeholder.com/600/c70a4d",
-          thumbnailUrl: "https://via.placeholder.com/150/c70a4d",
-        },
-        {
-          albumId: 1,
-          id: 33,
-          title: "culpa ipsam nobis qui fuga magni et mollitia",
-          url: "https://via.placeholder.com/600/501fe1",
-          thumbnailUrl: "https://via.placeholder.com/150/501fe1",
-        },
-        {
-          albumId: 1,
-          id: 34,
-          title: "vitae est facere quia itaque adipisci perferendis id maiores",
-          url: "https://via.placeholder.com/600/35185e",
-          thumbnailUrl: "https://via.placeholder.com/150/35185e",
-        },
-        {
-          albumId: 1,
-          id: 35,
-          title: "tenetur minus voluptatum et",
-          url: "https://via.placeholder.com/600/c96cad",
-          thumbnailUrl: "https://via.placeholder.com/150/c96cad",
-        },
-        {
-          albumId: 1,
-          id: 36,
-          title: "expedita rerum eaque",
-          url: "https://via.placeholder.com/600/4d564d",
-          thumbnailUrl: "https://via.placeholder.com/150/4d564d",
-        },
-        {
-          albumId: 1,
-          id: 37,
-          title: "totam voluptas iusto deserunt dolores",
-          url: "https://via.placeholder.com/600/ea51da",
-          thumbnailUrl: "https://via.placeholder.com/150/ea51da",
-        },
-        {
-          albumId: 1,
-          id: 38,
-          title: "natus magnam iure rerum pariatur molestias dolore nisi",
-          url: "https://via.placeholder.com/600/4f5b8d",
-          thumbnailUrl: "https://via.placeholder.com/150/4f5b8d",
-        },
-        {
-          albumId: 1,
-          id: 39,
-          title: "molestiae nam ullam et rerum doloribus",
-          url: "https://via.placeholder.com/600/1e71a2",
-          thumbnailUrl: "https://via.placeholder.com/150/1e71a2",
-        },
-        {
-          albumId: 1,
-          id: 40,
-          title:
-            "est quas voluptates dignissimos sint praesentium nisi recusandae",
-          url: "https://via.placeholder.com/600/3a0b95",
-          thumbnailUrl: "https://via.placeholder.com/150/3a0b95",
         },
       ],
     };
@@ -347,15 +199,19 @@ export default {
   align-items: center;
   justify-content: center;
   flex: 1;
-  padding: 50px;
 }
 .products {
-  margin: 5px;
-  flex: 1;
+  margin: 2px;
 }
 .product-display {
+  flex: 1;
   flex-direction: row;
+  border-color: gold;
+  border-width: 1px;
   flex-wrap: wrap;
+  width: 50%;
+  flex-basis: 50%;
+  padding: 2px;
 }
 .heading {
   font-size: 30px;
@@ -365,6 +221,6 @@ export default {
 }
 .text {
   text-align: center;
-  margin: 10px;
+  margin: 1px;
 }
 </style>

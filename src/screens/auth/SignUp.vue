@@ -1,41 +1,82 @@
 <template>
-  <view class="container">
-    <view>
-      <text-input
-        class="textInput"
-        v-model="email"
-        placeholder="Email"
-        auto-capitalize="none"
-      />
+  <nb-container :style="{ backgroundColor: '#fff' }">
+    <nb-content padder>
+      <view :style="{ margin: 10 }">
+        <view>
+          <text class="heading text">Welcome to Katemba Supplies</text>
+        </view>
 
-      <text-input
-        class="textInput"
-        v-model="username"
-        placeholder="Username"
-        auto-capitalize="none"
-      />
+        <!-- Form -->
+        <nb-form :style="{ margin: 10 }">
+          <nb-item last :error="!$v.username.required && $v.username.$dirty">
+            <nb-input
+              placeholder="Username"
+              v-model="username"
+              auto-capitalize="none"
+              :on-blur="() => $v.username.$touch()"
+            />
+          </nb-item>
 
-      <text-input
-        class="textInput"
-        v-model="password"
-        placeholder="Password"
-        auto-capitalize="none"
-        secure-text-entry
-        :on-blur="() => $v.password.$touch()"
-      />
-    </view>
+          <nb-item
+            last
+            :error="
+              (!$v.emailValue.required || !$v.emailValue.email) &&
+              $v.emailValue.$dirty
+            "
+          >
+            <nb-input
+              placeholder="Email"
+              v-model="emailValue"
+              auto-capitalize="none"
+              :on-blur="() => $v.emailValue.$touch()"
+            />
+          </nb-item>
 
-    <touchable-opacity class="btn" :on-press="register">
-      <text class="btn-text">Sign Up</text>
-    </touchable-opacity>
+          <nb-item last :error="!$v.password.required && $v.password.$dirty">
+            <nb-input
+              placeholder="Password"
+              v-model="password"
+              auto-capitalize="none"
+              secure-text-entry
+              :on-blur="() => $v.password.$touch()"
+            />
+          </nb-item>
+        </nb-form>
+        <view :style="{ margin: 10 }">
+          <nb-button block :on-press="register">
+            <nb-spinner v-if="logging_in" size="small" />
+            <nb-text>Register</nb-text>
+          </nb-button>
+        </view>
 
-    <touchable-opacity class="btn" :on-press="login">
-      <text class="btn-text">Login</text>
-    </touchable-opacity>
-  </view>
+        <view :style="{ margin: 10 }">
+          <touchable-opacity :on-press="backToLogin">
+            <text class="text">
+              Already have an account?
+              <text
+                :style="{
+                  fontWeight: '500',
+                  color: 'blue',
+                }"
+                >Login</text
+              ></text
+            >
+          </touchable-opacity>
+        </view>
+      </view>
+    </nb-content>
+  </nb-container>
 </template>
 
 <script>
+import React from "react";
+import firebase from "firebase";
+import { Toast } from "native-base";
+import Fire from "./../../api/firebaseAPI";
+import store from "./../../store";
+import { required, email } from "vuelidate/lib/validators";
+import { Alert, AsyncStorage } from "react-native";
+
 export default {
   // Declare `navigation` as a prop
   props: {
@@ -43,7 +84,7 @@ export default {
       type: Object,
     },
   },
-  data() {
+  data: function () {
     return {
       email: "",
       username: "",
@@ -51,11 +92,52 @@ export default {
     };
   },
   methods: {
-    login() {
+    backToLogin() {
       this.navigation.navigate("Login");
     },
     register() {
       this.navigation.navigate("Home");
+    },
+    login() {
+      if (this.emailValue && this.password && !this.$v.emailValue.$invalid) {
+        store.dispatch("LOGIN", {
+          userObj: { email: this.emailValue },
+          navigate: this.navigation.navigate,
+        });
+      } else {
+        Toast.show({
+          text: "Invalid Email or Password",
+          buttonText: "Okay",
+        });
+      }
+    },
+  },
+  created() {
+    AsyncStorage.getItem("email").then((val) => {
+      if (val) {
+        this.loaded = true;
+        this.navigation.navigate("Home");
+        store.dispatch("SET_USER", { userObj: { email: val } });
+      } else {
+        this.loaded = true;
+      }
+    });
+  },
+  computed: {
+    logging_in() {
+      return store.state.logging_in;
+    },
+  },
+  validations: {
+    username: {
+      required,
+    },
+    emailValue: {
+      required,
+      email,
+    },
+    password: {
+      required,
     },
   },
 };
@@ -71,35 +153,13 @@ export default {
 .heading {
   font-size: 30px;
   font-weight: bold;
-  color: darkolivegreen;
-  margin: 20px;
+  color: rgb(0, 0, 0);
+  margin-top: 70px;
+  margin-bottom: 80px;
+  text-align: center;
 }
 .text {
   text-align: center;
   margin: 10px;
-}
-.textInput {
-  margin: 10px;
-  font-size: 18px;
-  height: 50px;
-  width: 300px;
-  border-color: gray;
-  border-width: 1px;
-}
-.btn {
-  background-color: #40e0d0;
-  border-radius: 4px;
-  height: 52px;
-  align-items: center;
-  justify-content: center;
-  margin: 10px;
-}
-.btn-text {
-  font-size: 16px;
-  text-align: center;
-  margin: 10px;
-  font-weight: 600;
-  padding-left: 60px;
-  padding-right: 60px;
 }
 </style>

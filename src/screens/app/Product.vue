@@ -1,10 +1,11 @@
 <template>
-  <view>
-    <text>Product Details</text>
-  </view>
+  <nb-container>
+    <nb-content> </nb-content>
+  </nb-container>
 </template>
 
 <script>
+import React from "react";
 export default {};
 </script>
 
