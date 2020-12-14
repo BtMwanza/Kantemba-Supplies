@@ -1,19 +1,17 @@
 <template>
   <nb-container>
-    <nb-header>
+    <nb-header :style="{ backgroundColor: defaultColor }">
       <nb-body>
         <nb-title>Suppliers</nb-title>
       </nb-body>
     </nb-header>
 
     <nb-content>
-      <!-- <nb-list class="list" v-for="supplier in suppliers" :key="supplier.id">
-        <touchable-opacity :on-press="viewSupplierProfile">
+      <nb-list class="list" v-for="supplier in suppliers" :key="supplier.id">
+        <touchable-opacity :on-press="() => viewSupplierProfile(supplier)">
           <nb-text class="entry">{{ supplier.title }}</nb-text>
         </touchable-opacity>
-      </nb-list> -->
-
-      <flat-list :data="suppliers" :render-item="(item) => renderList(item)" />
+      </nb-list>
     </nb-content>
   </nb-container>
 </template>
@@ -30,6 +28,7 @@ export default {
   },
   data: function () {
     return {
+      defaultColor: "#1b4f72",
       suppliers: [
         {
           id: 1,
@@ -75,20 +74,13 @@ export default {
     };
   },
   methods: {
-    viewSupplierProfile: function () {
-      // const id = this.suppliers.id;
-      const title = this.suppliers.title;
+    viewSupplierProfile: function (supplier) {
+      // const id = this.supplier.id;
+      const title = supplier.title;
       console.log(title);
       this.navigation.navigate("SupplierProfile", {
         title: title,
       });
-    },
-    renderList: function (item) {
-      return (
-        <TouchableOpacity class="list">
-          <Text>{item.item.title}</Text>
-        </TouchableOpacity>
-      );
     },
   },
 };

@@ -1,19 +1,15 @@
 <template>
   <nb-container>
     <nb-header :style="{ backgroundColor: defaultColor }">
-      <nb-body></nb-body>
+      <nb-body>
+        <nb-title>Supplier Profile for {{ supplierName }}</nb-title>
+      </nb-body>
     </nb-header>
   </nb-container>
 </template>
 
 <script>
-export default {
-  data: function () {
-    return {
-      defaultColor: "#1b4f72",
-    };
-  },
-};
+export default {};
 </script>
 
 <style>

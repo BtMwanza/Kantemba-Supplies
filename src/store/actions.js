@@ -17,7 +17,7 @@ export function LOGIN({ commit, state }, { userObj, navigate }) {
   return new Promise((resolve, reject) => {
     setTimeout(() => {
       commit('LOGIN_SUCCESFULL', { userObj })
-      Fire.shared.subscribeToAuthChanges('email', userObj.email)
+      firebase.auth().signInWithEmailAndPassword('email', userObj.email)
       navigate('Home');
       resolve();
     }, 1000)

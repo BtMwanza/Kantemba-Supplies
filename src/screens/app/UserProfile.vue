@@ -1,6 +1,6 @@
 <template>
   <nb-container>
-    <nb-header>
+    <nb-header :style="{ backgroundColor: defaultColor }">
       <nb-body>
         <nb-title>{{ shopName }}</nb-title>
       </nb-body>
@@ -49,6 +49,7 @@ export default {
   },
   data() {
     return {
+      defaultColor: "#1b4f72",
       shopName: "Earth-Clan Shop",
       firstName: "Vue",
       lastName: "Developer",

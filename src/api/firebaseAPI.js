@@ -50,27 +50,49 @@ class Fire {
     });
   };
 
-  createUser = async user => {
+  signIn = async (email, password) => {
+
+    try {
+      const signedIn = await firebase.auth().signInWithEmailAndPassword(email, password);
+      console.log(signedIn);
+      if (signedIn) {
+        return signedIn.user;
+      }
+    } catch (e) {
+      console.log(e.message);
+      return {
+        errorMessage: e.message
+      }
+    }
+  }
+
+  createUser = async (firstName, lastName, otherName, address, city, shopName, email, password, avatar) => {
     let remoteUri = null;
 
     try {
-      await firebase.auth().createUserWithEmailAndPassword(user.email, user.password);
+      await firebase.auth().createUserWithEmailAndPassword(email.trim(), password);
 
-      let db = this.firestore.collection("users").doc(this.uid);
+      let db = firebase.firestore().collection("users").doc(this.uid);
 
       db.set({
-        name: user.name,
-        email: user.email,
-        avatar: null
+        firstName: firstName,
+        lastName: lastName,
+        otherName: otherName,
+        address: address,
+        city: city,
+        email: email,
+        avatar: null,
+        shopName: shopName,
+
       });
 
-      if (user.avatar) {
-        remoteUri = await this.uploadPhotoAsync(user.avatar, `avatars/${this.uid}`);
+      if (avatar) {
+        remoteUri = await this.uploadPhotoAsync(avatar, `avatars/${this.uid}`);
 
         db.set({ avatar: remoteUri }, { merge: true });
       }
     } catch (error) {
-      alert("Error: ", error);
+      alert(error);
     }
   };
 

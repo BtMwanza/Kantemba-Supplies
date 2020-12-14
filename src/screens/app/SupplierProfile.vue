@@ -1,7 +1,7 @@
 <template>
   <nb-container>
     <!-- Header -->
-    <nb-header>
+    <nb-header :style="{ backgroundColor: defaultColor }">
       <nb-body>
         <nb-title>Supplier Profile for {{ supplierName }}</nb-title>
       </nb-body>
@@ -24,6 +24,7 @@ export default {
   },
   data: function () {
     return {
+      defaultColor: "#1b4f72",
       supplierName: this.navigation.getParam("title"),
       logo: "",
       address: "",

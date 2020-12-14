@@ -1,25 +1,19 @@
 <template>
   <nb-container :style="{ backgroundColor: '#fff' }">
     <nb-content padder>
-      <view v-if="loaded" :style="{ margin: 10 }">
+      <view :style="{ margin: 10 }">
         <view>
           <text class="heading">Welcome back</text>
         </view>
 
         <!-- Form -->
         <nb-form :style="{ margin: 10 }">
-          <nb-item
-            last
-            :error="
-              (!$v.emailValue.required || !$v.emailValue.email) &&
-              $v.emailValue.$dirty
-            "
-          >
+          <nb-item last :error="!$v.email.required && $v.email.$dirty">
             <nb-input
               placeholder="Email"
-              v-model="emailValue"
+              v-model="email"
               auto-capitalize="none"
-              :on-blur="() => $v.emailValue.$touch()"
+              :on-blur="() => $v.email.$touch()"
             />
           </nb-item>
 
@@ -57,21 +51,25 @@
       </view>
     </nb-content>
 
-    <view class="container" v-if="!loaded">
+    <!-- <view class="container" v-if="!loaded">
       <nb-text>Loading</nb-text>
       <activity-indicator size="large" color="#0000ff" />
-    </view>
+    </view> -->
   </nb-container>
 </template>
 
 <script>
 import React from "react";
+import Vue from "vue-native-core";
 import firebase from "firebase";
 import { Toast } from "native-base";
 import Fire from "./../../api/firebaseAPI";
 import store from "./../../store";
 import { required, email } from "vuelidate/lib/validators";
 import { Alert, AsyncStorage } from "react-native";
+import { Font } from "expo-font";
+
+Vue.use(firebase);
 
 export default {
   // Declare `navigation` as a prop
@@ -82,15 +80,14 @@ export default {
   },
   data: function () {
     return {
-      emailValue: "",
+      email: "",
       password: "",
       loaded: false,
     };
   },
   validations: {
-    emailValue: {
+    email: {
       required,
-      email,
     },
     password: {
       required,
@@ -101,17 +98,6 @@ export default {
       return store.state.logging_in;
     },
   },
-  created() {
-    AsyncStorage.getItem("email").then((val) => {
-      if (val) {
-        this.loaded = true;
-        this.navigation.navigate("Home");
-        store.dispatch("SET_USER", { userObj: { email: val } });
-      } else {
-        this.loaded = true;
-      }
-    });
-  },
   methods: {
     goToHomeScreen() {
       this.navigation.navigate("Home");
@@ -120,14 +106,14 @@ export default {
       this.navigation.navigate("Register");
     },
     login() {
-      if (this.emailValue && this.password && !this.$v.emailValue.$invalid) {
-        firebase
-          .auth()
-          .signInWithemailValueAndPassword(emailValue.trim(), password)
-          .catch((error) => Alert.alert(error));
+      if (this.email && this.password && !this.$v.email.$invalid) {
+        Fire.shared
+          .signIn(this.email.trim(), this.password)
+          .catch((error) => alert(error));
+        this.navigation.navigate("Home");
       } else {
         Toast.show({
-          text: "Invalid emailValue or Password",
+          text: "Invalid Email or Password",
           buttonText: "Okay",
         });
       }
