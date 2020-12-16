@@ -11,7 +11,7 @@
 
       <nb-body>
         <nb-title>My Cart</nb-title>
-        <nb-title>Total: K{{ totalPrice }}</nb-title>
+        <nb-title>Total: K{{ subtotalPrice().toFixed(2) }}</nb-title>
       </nb-body>
 
       <nb-right>
@@ -24,43 +24,63 @@
     <!-- Body -->
     <nb-content>
       <!-- Product 1 -->
-      <nb-list-item thumbnail v-for="item in items" :key="item.id">
-        <nb-body>
-          <nb-text>{{ item.title }}</nb-text>
-        </nb-body>
-        <nb-right
-          :style="{
-            flex: 1,
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-          }"
-        >
-          <!--  Subtract button -->
-          <nb-button bordered :onPress="() => handleSubtractQuantity(item)">
-            <nb-icon
-              name="remove"
-              :style="{ fontSize: 12, color: defaultColor }"
+      <nb-list v-for="item in items" :key="item.id">
+        <nb-list-item avatar>
+          <nb-left>
+            <!--  Subtract button -->
+            <button
+              title="-"
+              color="#1b4f72"
+              :on-press="() => quantityHandler('less', item)"
             />
-          </nb-button>
 
-          <!-- Quantity -->
-          <nb-text>{{ item.quantity }}</nb-text>
+            <!-- Quantity -->
+            <nb-text :style="{ paddingLeft: 6, paddingRight: 6 }">{{
+              item.qty
+            }}</nb-text>
 
-          <!-- Add button -->
-          <nb-button bordered :onPress="() => handleAddQuantity(item)">
-            <nb-icon
-              name="add"
-              :style="{ fontSize: 12, color: defaultColor }"
+            <!-- Add button -->
+            <button
+              title="+"
+              color="#1b4f72"
+              :on-press="() => quantityHandler('more', item)"
             />
-          </nb-button>
-        </nb-right>
-      </nb-list-item>
+          </nb-left>
+
+          <nb-body>
+            <nb-text :numberOfLines="2" :style="{ height: 40 }">{{
+              item.title
+            }}</nb-text>
+          </nb-body>
+
+          <nb-right>
+            <touchable-opacity
+              :style="{
+                marginRight: 10,
+                height: 40,
+                width: 40,
+                alignItems: 'center',
+                justifyContent: 'center',
+              }"
+              :onPress="() => handleDelete(item)"
+            >
+              <nb-icon
+                name="trash"
+                :style="{ fontSize: 20, color: defaultColor }"
+              />
+            </touchable-opacity>
+          </nb-right>
+        </nb-list-item>
+      </nb-list>
       <!-- End Product 1 -->
     </nb-content>
   </nb-container>
 </template>
 
 <script>
+import React from "react";
+import { Alert } from "react-native";
+
 export default {
   // Declare `navigation` as a prop
   props: {
@@ -72,14 +92,14 @@ export default {
     return {
       defaultColor: "#1b4f72",
       // quantity: 1,
-      // unitPrice: 100,
       totalPrice: 0,
+      cartItems: [],
       items: [
         {
           id: 1,
           title: "accusamus beatae ",
           unitPrice: 100,
-          quantity: 1,
+          qty: 1,
           url: "https://via.placeholder.com/600/92c952",
           thumbnailUrl: "https://via.placeholder.com/150/92c952",
         },
@@ -87,7 +107,7 @@ export default {
           id: 2,
           title: "reprehenderit",
           unitPrice: 90,
-          quantity: 1,
+          qty: 1,
           url: "https://via.placeholder.com/600/771796",
           thumbnailUrl: "https://via.placeholder.com/150/771796",
         },
@@ -95,7 +115,7 @@ export default {
           id: 3,
           title: "officia ",
           unitPrice: 200,
-          quantity: 1,
+          qty: 1,
           url: "https://via.placeholder.com/600/24f355",
           thumbnailUrl: "https://via.placeholder.com/150/24f355",
         },
@@ -103,7 +123,7 @@ export default {
           id: 4,
           title: "culpa ",
           unitPrice: 50,
-          quantity: 1,
+          qty: 1,
           url: "https://via.placeholder.com/600/d32776",
           thumbnailUrl: "https://via.placeholder.com/150/d32776",
         },
@@ -114,20 +134,54 @@ export default {
     checkout: function () {
       alert("Checkout");
     },
-    handleAddQuantity: function (item) {
-      let idx = this.items.indexOf(item);
-      this.items[idx].quantity = this.items[idx].quantity + 1;
+    quantityHandler: function (action, item) {
+      const newItems = [...this.items]; // clone the array
+      let idx = newItems.indexOf(item);
+      let currentQty = newItems[idx].qty;
 
-      this.totalPrice = this.items[idx].quantity * this.items[idx].unitPrice;
-    },
-    handleSubtractQuantity: function (item) {
-      let idx = this.items.indexOf(item);
-      this.items[idx].quantity = this.items[idx].quantity - 1;
-      if (this.items[idx].quantity < 1) {
-        this.items[idx].quantity = 1;
+      if (action == "more") {
+        newItems[idx].qty = currentQty + 1;
+      } else if (action == "less") {
+        newItems[idx].qty = currentQty > 1 ? currentQty - 1 : 1;
       }
 
-      this.totalPrice = this.items[idx].quantity * this.items[idx].unitPrice;
+      this.items = newItems; // set new state
+    },
+    subtotalPrice: function () {
+      const { cartItems } = this.data;
+      if (cartItems) {
+        return cartItems.reduce(
+          (sum, item) =>
+            sum + (item.checked == 1 ? item.qty * item.salePrice : 0),
+          0
+        );
+      }
+      return 0;
+    },
+    handleDelete: function (item) {
+      Alert.alert(
+        "Are you sure you want to delete this item from your cart?",
+        "",
+        [
+          {
+            text: "Cancel",
+            onPress: () => console.log("Cancel Pressed"),
+            style: "cancel",
+          },
+          {
+            text: "Delete",
+            onPress: () => {
+              let updatedCart = this.state.cartItems; /* Clone it first */
+              updatedCart.splice(
+                item,
+                1
+              ); /* Remove item from the cloned cart state */
+              this.setState(updatedCart); /* Update the state */
+            },
+          },
+        ],
+        { cancelable: false }
+      );
     },
     goBack: function () {
       this.navigation.goBack();

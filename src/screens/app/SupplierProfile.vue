@@ -83,7 +83,6 @@
 
 <script>
 import React from "react";
-import cardImage from "./../../../assets/tempImage4.jpg";
 import firebase from "firebase";
 
 export default {
@@ -107,15 +106,6 @@ export default {
       supplier: [],
       supplierID: this.navigation.getParam("supplierID"),
       supplierName: this.navigation.getParam("title"),
-      logo: this.navigation.getParam("logo"),
-      address1: this.navigation.getParam("address1"),
-      address2: this.navigation.getParam("address2"),
-      website: this.navigation.getParam("website"),
-      email: this.navigation.getParam("email"),
-      city: this.navigation.getParam("city"),
-      phoneNumber: this.navigation.getParam("phoneNumber"),
-      registrationNumber: this.navigation.getParam("registrationNumber"),
-      activityStatus: this.navigation.getParam("activityStatus"),
     };
   },
   methods: {
