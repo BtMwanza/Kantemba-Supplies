@@ -2,8 +2,14 @@
   <nb-container>
     <!-- Header -->
     <nb-header :style="{ backgroundColor: defaultColor }">
+      <status-bar background-color="#1b4f72" bar-style="light-content" />
+      <nb-left>
+        <nb-button transparent :on-press="() => goBack()">
+          <nb-icon name="arrow-back" />
+        </nb-button>
+      </nb-left>
       <nb-body>
-        <nb-title>{{ productName }}</nb-title>
+        <nb-title>{{ navigation.getParam("productName") }}</nb-title>
       </nb-body>
       <nb-right>
         <nb-button transparent :onPress="() => addToCart()">
@@ -20,27 +26,57 @@
     <nb-grid>
       <nb-col>
         <nb-content>
-          <nb-card :style="{ borderColor: defaultColor, borderWidth: 4 }">
+          <nb-card
+            :style="{
+              borderColor: defaultColor,
+              borderWidth: 4,
+              padding: 2,
+              marginTop: -3,
+            }"
+          >
             <nb-card-item cardBody>
               <nb-body>
                 <image
-                  :source="{ uri: '{{productImage}}' }"
+                  :source="{ uri: navigation.getParam('productImage') }"
                   class="card-item-image"
                   :style="stylesObj.cardItemImage"
                 />
 
-                <nb-text>{{ productDescription }}</nb-text>
+                <nb-text>{{
+                  navigation.getParam("productDescription")
+                }}</nb-text>
               </nb-body>
             </nb-card-item>
 
             <nb-card-item :style="{ backgroundColor: defaultColor }">
               <nb-left>
                 <nb-text :style="{ fontSize: 20, color: '#fff', marginLeft: 0 }"
-                  >Unit price: {{ productPrice }}</nb-text
+                  >Unit price: {{ navigation.getParam("unitPrice") }}</nb-text
                 >
               </nb-left>
             </nb-card-item>
           </nb-card>
+
+          <nb-form
+            :style="{
+              padding: 2,
+            }"
+          >
+            <nb-textarea
+              :style="{
+                borderColor: defaultColor,
+                borderWidth: 4,
+                marginBottom: 2,
+                marginTop: -3,
+              }"
+              :rowSpan="5"
+              bordered
+              placeholder="Type your enquiry here..."
+            />
+          </nb-form>
+          <nb-button bordered info :style="{ margin: 2 }">
+            <nb-text>Info</nb-text>
+          </nb-button>
         </nb-content>
       </nb-col>
     </nb-grid>
@@ -49,17 +85,13 @@
 
 <script>
 import React from "react";
+import firebase from "firebase";
 
 export default {
   mounted() {},
   data() {
     return {
       defaultColor: "#1b4f72",
-      productImage: this.navigation.getParam("image"),
-      productName: this.navigation.getParam("title"),
-      productPrice: this.navigation.getParam("price"),
-      productDescription:
-        "Coffee Shop iOS is a free UI Kit which emulates an iOS app for a local coffee shop. It comes with more than 50 well-designed screens, suitable for any app which features product categories and individual items. It is a part of the Ultimate UI Kit, crafted by Five agency. This free ecommerce UI Kit is designed using a vivid and bright color palette, and implements a clean interface. Coffee Shop UI Kit includes all the elements necessary for online purchasing and browsing. Fonts are free, and belong to Google Fonts library.",
       stylesObj: {
         cardItemImage: {
           resizeMode: "cover",
@@ -77,6 +109,9 @@ export default {
     addToCart: function () {
       alert("Added to Cart");
     },
+    goBack: function () {
+      this.navigation.goBack();
+    },
   },
 };
 </script>
@@ -84,7 +119,8 @@ export default {
 <style>
 .card-item-image {
   flex: 1;
-  height: 200;
+  height: 300;
+  width: 100%;
 }
 .text {
   text-align: center;

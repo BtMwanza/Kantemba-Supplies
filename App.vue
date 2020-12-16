@@ -20,12 +20,13 @@ import {
   SignIn,
   SignUp,
   SupplierProfile,
-  Quotation,
-  Product,
+  Receipt,
+  ProductList,
   Suppliers,
   Loading,
   Cart,
   Checkout,
+  ProductDetails,
 } from "./src/screens";
 import Vue from "vue-native-core";
 import Ionicons from "react-native-vector-icons/Ionicons";
@@ -53,9 +54,9 @@ const AppTabs = createBottomTabNavigator(
     Checkout: {
       screen: Checkout,
     },
-    Suppliers: {
+    /*     Suppliers: {
       screen: Suppliers,
-    },
+    }, */
   },
   {
     defaultNavigationOptions: ({ navigation }) => ({
@@ -89,8 +90,9 @@ const AppTabs = createBottomTabNavigator(
 const AppContainer = createStackNavigator(
   {
     Tabs: AppTabs,
-    ProductDetails: Product,
-    Quotation: Quotation,
+    ProductDetails: ProductDetails,
+    ProductList: ProductList,
+    Receipt: Receipt,
     SupplierProfile: SupplierProfile,
   },
   {
