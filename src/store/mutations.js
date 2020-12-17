@@ -20,3 +20,7 @@ export function LOGIN_SUCCESFULL(state, { userObj }) {
 export function ADD_Item(state, product ) {
       state.StoreCart.push(product.id);
     },
+
+export function REMOVE_Item(state, index) {
+      state.StoreCart.splice(index, 1);
+  },
