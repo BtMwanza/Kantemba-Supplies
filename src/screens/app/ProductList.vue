@@ -43,7 +43,7 @@
               </nb-left>
 
               <nb-right>
-                <nb-button transparent :onPress="() => addToCart()">
+                <nb-button transparent :onPress="() => addToCart(product)">
                   <nb-icon
                     name="cart"
                     :style="{ fontSize: 25, color: defaultColor }"
@@ -62,7 +62,9 @@
 <script>
 import React from "react";
 import { Text } from "react-native";
+import * as SQLite from "expo-sqlite";
 import firebase from "firebase";
+import store from "./../../store";
 
 export default {
   mounted() {
@@ -103,8 +105,13 @@ export default {
         unitPrice: unitPrice,
       });
     },
-    addToCart: function () {
-      alert("Added to Cart");
+    addToCart: function (product) {
+      const cartItem = [
+        product.productID,
+        product.productName,
+        product.unitPrice,
+      ];
+      this.$store.commit(cartItem, "cartItems");
     },
     goBack: function () {
       this.navigation.goBack();

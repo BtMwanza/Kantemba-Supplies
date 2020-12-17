@@ -86,6 +86,8 @@
 <script>
 import React from "react";
 import firebase from "firebase";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import * as SQLite from "expo-sqlite";
 
 export default {
   mounted() {},

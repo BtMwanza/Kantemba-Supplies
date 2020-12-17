@@ -1,5 +1,5 @@
 <template>
-  <view class="container">
+  <view class="container" v-if="logging_in && isLoading">
     <nb-text>Loading</nb-text>
     <activity-indicator size="large" color="#0000ff" />
   </view>
@@ -19,21 +19,13 @@ export default {
   },
   data: function () {
     return {
-      signedIn: false,
-      isLoading: false,
+      isLoading: true,
     };
   },
-  async mounted() {
-    var that = this;
-    await firebase.auth().onAuthStateChanged(function (user) {
-      if (user) {
-        that.signedIn = true;
-        this.navigation.navigate(user ? "App" : "Auth");
-      } else {
-        that.signedIn = false;
-        that.isLoading = true;
-      }
-    });
+  computed: {
+    logging_in() {
+      return store.state.logging_in;
+    },
   },
 };
 </script>

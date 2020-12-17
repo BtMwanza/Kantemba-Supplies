@@ -15,18 +15,8 @@ const store = new Vuex.Store({
   mutations,
 
   state: {
-    email: '',
-    password: '',
-    avatar: '',
-    firstName: '',
-    lastName: '',
-    otherName: '',
-    productAvatar: '',
-    productName: '',
-    price: '',
     isBought: false,
-    activeType: 'posts',
-    posts: [],
+    cartItems: [],
     logging_in: false,
     userObj: {},
     isLoading: false

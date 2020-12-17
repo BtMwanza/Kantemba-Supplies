@@ -104,7 +104,7 @@
           </nb-item>
         </nb-form>
         <view :style="{ margin: 10 }">
-          <nb-button block :on-press="login">
+          <nb-button block :on-press="register">
             <nb-spinner v-if="logging_in" size="small" />
             <nb-text>Register</nb-text>
           </nb-button>
@@ -136,7 +136,8 @@ import { Toast } from "native-base";
 import Fire from "./../../api/firebaseAPI";
 import store from "./../../store";
 import { required, email } from "vuelidate/lib/validators";
-import { Alert, AsyncStorage } from "react-native";
+import { Alert } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default {
   // Declare `navigation` as a prop
@@ -158,14 +159,12 @@ export default {
       confirmPassword: "",
     };
   },
+
   methods: {
     backToLogin() {
       this.navigation.navigate("Login");
     },
-    register() {
-      this.navigation.navigate("Home");
-    },
-    login: function () {
+    register: function () {
       if (this.password == this.confirmPassword) {
         Fire.shared.createUser(
           this.firstName,
@@ -174,9 +173,20 @@ export default {
           this.address,
           this.city,
           this.shopName,
-          this.email,
-          this.password
+          this.email
         );
+        store.dispatch("REGISTER", {
+          userObj: [
+            { email: this.email },
+            { firstName: this.firstName },
+            { lastName: this.lastName },
+            { otherName: this.otherName },
+            { address: this.address },
+            { city: this.city },
+            { shopName: this.shopName },
+          ],
+          navigate: this.navigation.navigate,
+        });
         this.navigation.navigate("Home");
       } else {
         Toast.show({
@@ -184,11 +194,6 @@ export default {
           buttonText: "Okay",
         });
       }
-    },
-  },
-  computed: {
-    logging_in() {
-      return store.state.logging_in;
     },
   },
   validations: {

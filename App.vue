@@ -1,6 +1,7 @@
 <template>
   <root>
-    <app-navigator></app-navigator>
+    <app-navigator v-if="loaded"></app-navigator>
+    <app-loading v-if="!loaded"></app-loading>
   </root>
 </template>
 
@@ -33,11 +34,12 @@ import Ionicons from "react-native-vector-icons/Ionicons";
 import { VueNativeBase } from "native-base";
 import Vuelidate from "vuelidate";
 import firebase from "firebase";
+import * as Font from "expo-font";
+import { AppLoading } from "expo";
 
 // registering all native-base components to the global scope of the Vue
 Vue.use(VueNativeBase);
 Vue.use(Vuelidate);
-Vue.use(firebase);
 
 // Bottom Tabs
 const AppTabs = createBottomTabNavigator(
@@ -125,6 +127,18 @@ const AppNavigator = createAppContainer(
 );
 
 export default {
-  components: { Root, AppNavigator },
+  components: { Root, AppNavigator, AppLoading },
+  data: function () {
+    return {
+      loaded: false,
+    };
+  },
+  mounted: async function () {
+    await Font.loadAsync({
+      Roboto: require("native-base/Fonts/Roboto.ttf"),
+      Roboto_medium: require("native-base/Fonts/Roboto_medium.ttf"),
+    });
+    this.loaded = true;
+  },
 };
 </script>

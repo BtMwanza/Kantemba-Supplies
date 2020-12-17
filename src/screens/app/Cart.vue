@@ -11,7 +11,7 @@
 
       <nb-body>
         <nb-title>My Cart</nb-title>
-        <nb-title>Total: K{{ subtotalPrice().toFixed(2) }}</nb-title>
+        <nb-title>Total: K{{ totalPrice }}</nb-title>
       </nb-body>
 
       <nb-right>
@@ -62,7 +62,7 @@
                 alignItems: 'center',
                 justifyContent: 'center',
               }"
-              :onPress="() => handleDelete(item)"
+              :on-press="() => handleDelete(item)"
             >
               <nb-icon
                 name="trash"
@@ -80,6 +80,7 @@
 <script>
 import React from "react";
 import { Alert } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default {
   // Declare `navigation` as a prop
@@ -102,6 +103,7 @@ export default {
           qty: 1,
           url: "https://via.placeholder.com/600/92c952",
           thumbnailUrl: "https://via.placeholder.com/150/92c952",
+          checked: true,
         },
         {
           id: 2,
@@ -110,6 +112,7 @@ export default {
           qty: 1,
           url: "https://via.placeholder.com/600/771796",
           thumbnailUrl: "https://via.placeholder.com/150/771796",
+          checked: true,
         },
         {
           id: 3,
@@ -118,6 +121,7 @@ export default {
           qty: 1,
           url: "https://via.placeholder.com/600/24f355",
           thumbnailUrl: "https://via.placeholder.com/150/24f355",
+          checked: true,
         },
         {
           id: 4,
@@ -126,6 +130,7 @@ export default {
           qty: 1,
           url: "https://via.placeholder.com/600/d32776",
           thumbnailUrl: "https://via.placeholder.com/150/d32776",
+          checked: true,
         },
       ],
     };
@@ -148,7 +153,7 @@ export default {
       this.items = newItems; // set new state
     },
     subtotalPrice: function () {
-      const { cartItems } = this.data;
+      const { cartItems } = this.items;
       if (cartItems) {
         return cartItems.reduce(
           (sum, item) =>
@@ -159,6 +164,7 @@ export default {
       return 0;
     },
     handleDelete: function (item) {
+      let idx = this.items.indexOf(item);
       Alert.alert(
         "Are you sure you want to delete this item from your cart?",
         "",
@@ -171,11 +177,8 @@ export default {
           {
             text: "Delete",
             onPress: () => {
-              let updatedCart = this.state.cartItems; /* Clone it first */
-              updatedCart.splice(
-                item,
-                1
-              ); /* Remove item from the cloned cart state */
+              let updatedCart = this.items; /* Clone it first */
+              updatedCart.splice(item[idx].id);
               this.setState(updatedCart); /* Update the state */
             },
           },

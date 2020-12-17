@@ -34,6 +34,7 @@
 import React from "react";
 import { Text } from "react-native";
 import firebase from "firebase";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default {
   mounted: function () {

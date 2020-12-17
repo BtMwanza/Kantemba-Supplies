@@ -66,7 +66,8 @@ import { Toast } from "native-base";
 import Fire from "./../../api/firebaseAPI";
 import store from "./../../store";
 import { required, email } from "vuelidate/lib/validators";
-import { Alert, AsyncStorage } from "react-native";
+import { Alert } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Font } from "expo-font";
 
 Vue.use(firebase);
@@ -98,19 +99,27 @@ export default {
       return store.state.logging_in;
     },
   },
+  created() {
+    AsyncStorage.multiGet(["email"]).then((val) => {
+      if (val) {
+        this.loaded = true;
+        this.navigation.navigate("Home");
+        store.dispatch("SET_USER", { userObj: { email: val } });
+      } else {
+        this.loaded = true;
+      }
+    });
+  },
   methods: {
-    goToHomeScreen() {
-      this.navigation.navigate("Home");
-    },
     register() {
       this.navigation.navigate("Register");
     },
     login() {
       if (this.email && this.password && !this.$v.email.$invalid) {
-        Fire.shared
-          .signIn(this.email.trim(), this.password)
-          .catch((error) => alert(error));
-        this.navigation.navigate("Home");
+        store.dispatch("LOGIN", {
+          userObj: { email: this.email },
+          navigate: this.navigation.navigate,
+        });
       } else {
         Toast.show({
           text: "Invalid Email or Password",
