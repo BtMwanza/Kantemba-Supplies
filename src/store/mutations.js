@@ -16,6 +16,7 @@ export function LOGIN_SUCCESFULL(state, { userObj }) {
   state.logging_in = false;
 }
 
-export function ADD_TO_CART(state) {
-  state.items = cartItems
-}
+
+export function ADD_Item(state, product ) {
+      state.StoreCart.push(product.id);
+    },
