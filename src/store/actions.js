@@ -60,6 +60,10 @@ export function LOGOUT({ commit, state }, callback) {
   })
 }
 
-export function ADD_TO_CART({ commit, state }, item) {
-  return commit('ADD_TO_CART', item)
-}
+export function addItem(context, id) {
+      context.commit("ADD_Item", id);
+    }
+
+export function  removeItem(context, index) {
+      context.commit("REMOVE_Item", index);
+    },
