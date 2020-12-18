@@ -11,15 +11,7 @@
       <nb-body>
         <nb-title>{{ navigation.getParam("productName") }}</nb-title>
       </nb-body>
-      <nb-right>
-        <nb-button transparent :onPress="() => addToCart()">
-          <nb-icon
-            name="cart"
-            :style="{ fontSize: 25, color: '#fff' }"
-            active
-          ></nb-icon>
-        </nb-button>
-      </nb-right>
+      <nb-right> </nb-right>
     </nb-header>
 
     <!-- Body -->
@@ -71,11 +63,17 @@
               }"
               :rowSpan="5"
               bordered
+              v-model="message"
               placeholder="Type your enquiry here..."
             />
           </nb-form>
-          <nb-button bordered info :style="{ margin: 2 }">
-            <nb-text>Info</nb-text>
+          <nb-button
+            bordered
+            info
+            :style="{ margin: 2 }"
+            :on-press="() => sendEnquiry()"
+          >
+            <nb-text>Send</nb-text>
           </nb-button>
         </nb-content>
       </nb-col>
@@ -87,13 +85,14 @@
 import React from "react";
 import firebase from "firebase";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import * as SQLite from "expo-sqlite";
+import store from "./../../store";
 
 export default {
   mounted() {},
   data() {
     return {
       defaultColor: "#1b4f72",
+      message: "",
       stylesObj: {
         cardItemImage: {
           resizeMode: "cover",
@@ -108,11 +107,31 @@ export default {
     },
   },
   methods: {
-    addToCart: function () {
-      alert("Added to Cart");
-    },
     goBack: function () {
       this.navigation.goBack();
+    },
+    getEmail: function () {
+      AsyncStorage.multiGet(["email"]).then((val) => {
+        if (val) {
+          this.userEmail = { val };
+          console.log(this.userEmail);
+        }
+      });
+    },
+    sendEnquiry: function () {
+      try {
+        firebase
+          .firestore()
+          .collection("ENQUIRIES")
+          .set({
+            user: this.userEmail,
+            productID: this.navigation.getParam("productID"),
+            to: this.navigation.getParam("supplierID"),
+            message: this.message,
+          });
+      } catch (error) {
+        alert(error);
+      }
     },
   },
 };

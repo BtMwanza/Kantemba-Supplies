@@ -28,51 +28,13 @@
           <nb-text class="heading">Total: K{{ totalPrice }} </nb-text>
         </nb-card-item>
         <nb-card-item>
-          <!-- <image
-              :source="cardImage"
-              class="card-item-image"
-              :style="stylesObj.cardItemImage"
-            /> -->
           <credit-card-input
-            :onValueChange="(cardData) => this.cardData({ cardData })"
+            :v-model="cardData"
             allowScroll
             requiresName
             inputContainerStyle
           />
         </nb-card-item>
-
-        <!-- <nb-form>
-          <nb-item stackedLabel last>
-            <nb-label>Cardholder Name</nb-label>
-            <nb-input placeholder="Full Name" />
-          </nb-item>
-          <nb-item stackedLabel last>
-            <nb-label>Card Number</nb-label>
-            <nb-input placeholder="0000 0000 0000 0000" />
-          </nb-item>
-
-          <nb-row>
-            <nb-col>
-              <nb-item stackedLabel last :style="{ marginRight: 4 }">
-                <nb-label>CVV Code</nb-label>
-                <nb-input placeholder="XXX" />
-              </nb-item>
-            </nb-col>
-
-            <nb-col>
-              <nb-item stackedLabel last>
-                <nb-label>Exp Date</nb-label>
-                <nb-item>
-                  <nb-input placeholder="Month" />
-                </nb-item>
-
-                <nb-item>
-                  <nb-input placeholder="Year" />
-                </nb-item>
-              </nb-item>
-            </nb-col>
-          </nb-row>
-        </nb-form> -->
       </nb-content>
     </nb-grid>
   </nb-container>
@@ -81,7 +43,6 @@
 <script>
 import React from "react";
 import { Alert } from "react-native";
-import cardImage from "./../../../assets/card.png";
 import { CreditCardInput } from "react-native-credit-card-input";
 import axios from "axios";
 
@@ -107,7 +68,6 @@ export default {
       paymentStatus: "",
       hasMadePayment: false,
       cardData: { valid: false },
-      cardImage,
       stylesObj: {
         cardItemImage: {
           resizeMode: "cover",

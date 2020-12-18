@@ -15,12 +15,21 @@ const store = new Vuex.Store({
   mutations,
 
   state: {
-    isBought: false,
-    cartItems: [],
+    products: [],
+    isAdded: false,
+    storeCart: [],
+    totalPrice: 0,
     logging_in: false,
     userObj: {},
-    isLoading: false
-  }
+    isLoading: false,
+    loadingProducts: false
+  },
+  getters: {
+    products: (state) => state.products,
+    storeCart: (state) => state.storeCart,
+  },
+
 });
+
 
 export default store;

@@ -36,15 +36,15 @@
 
         <view :style="{ margin: 10 }">
           <touchable-opacity :on-press="register">
-            <text class="text">
+            <nb-text class="text">
               Don't have an account?
-              <text
+              <nb-text
                 :style="{
                   fontWeight: '500',
                   color: 'blue',
                 }"
-                >Sign Up</text
-              ></text
+                >Sign Up</nb-text
+              ></nb-text
             >
           </touchable-opacity>
         </view>

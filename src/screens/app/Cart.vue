@@ -24,32 +24,32 @@
     <!-- Body -->
     <nb-content>
       <!-- Product 1 -->
-      <nb-list v-for="item in items" :key="item.id">
+      <nb-list v-for="(product, productID) in products" :key="productID">
         <nb-list-item avatar>
           <nb-left>
             <!--  Subtract button -->
             <button
               title="-"
               color="#1b4f72"
-              :on-press="() => quantityHandler('less', item)"
+              :on-press="() => quantityHandler('less', product)"
             />
 
             <!-- Quantity -->
             <nb-text :style="{ paddingLeft: 6, paddingRight: 6 }">{{
-              item.qty
+              product.productQuantity
             }}</nb-text>
 
             <!-- Add button -->
             <button
               title="+"
               color="#1b4f72"
-              :on-press="() => quantityHandler('more', item)"
+              :on-press="() => quantityHandler('more', product)"
             />
           </nb-left>
 
           <nb-body>
             <nb-text :numberOfLines="2" :style="{ height: 40 }">{{
-              item.title
+              product.productName
             }}</nb-text>
           </nb-body>
 
@@ -62,7 +62,7 @@
                 alignItems: 'center',
                 justifyContent: 'center',
               }"
-              :on-press="() => handleDelete(item)"
+              :on-press="() => handleDelete(product)"
             >
               <nb-icon
                 name="trash"
@@ -81,6 +81,7 @@
 import React from "react";
 import { Alert } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import store from "./../../store";
 
 export default {
   // Declare `navigation` as a prop
@@ -89,102 +90,75 @@ export default {
       type: Object,
     },
   },
+
+  computed: {
+    products() {
+      return store.getters.storeCart;
+    },
+
+    totalPrice() {
+      return store.getters.storeCart.reduce(
+        (acc, el) => acc + el.unitPrice * el.productQuantity,
+        0
+      );
+    },
+  },
+
   data: function () {
     return {
       defaultColor: "#1b4f72",
-      // quantity: 1,
-      totalPrice: 0,
-      cartItems: [],
-      items: [
-        {
-          id: 1,
-          title: "accusamus beatae ",
-          unitPrice: 100,
-          qty: 1,
-          url: "https://via.placeholder.com/600/92c952",
-          thumbnailUrl: "https://via.placeholder.com/150/92c952",
-          checked: true,
-        },
-        {
-          id: 2,
-          title: "reprehenderit",
-          unitPrice: 90,
-          qty: 1,
-          url: "https://via.placeholder.com/600/771796",
-          thumbnailUrl: "https://via.placeholder.com/150/771796",
-          checked: true,
-        },
-        {
-          id: 3,
-          title: "officia ",
-          unitPrice: 200,
-          qty: 1,
-          url: "https://via.placeholder.com/600/24f355",
-          thumbnailUrl: "https://via.placeholder.com/150/24f355",
-          checked: true,
-        },
-        {
-          id: 4,
-          title: "culpa ",
-          unitPrice: 50,
-          qty: 1,
-          url: "https://via.placeholder.com/600/d32776",
-          thumbnailUrl: "https://via.placeholder.com/150/d32776",
-          checked: true,
-        },
-      ],
     };
   },
+
   methods: {
     checkout: function () {
-      alert("Checkout");
-    },
-    quantityHandler: function (action, item) {
-      const newItems = [...this.items]; // clone the array
-      let idx = newItems.indexOf(item);
-      let currentQty = newItems[idx].qty;
-
-      if (action == "more") {
-        newItems[idx].qty = currentQty + 1;
-      } else if (action == "less") {
-        newItems[idx].qty = currentQty > 1 ? currentQty - 1 : 1;
+      try {
+        alert("Checkout Pressed!");
+      } catch (error) {
+        alert(error);
       }
-
-      this.items = newItems; // set new state
     },
-    subtotalPrice: function () {
-      const { cartItems } = this.items;
-      if (cartItems) {
-        return cartItems.reduce(
-          (sum, item) =>
-            sum + (item.checked == 1 ? item.qty * item.salePrice : 0),
-          0
-        );
+    quantityHandler: function (action, product) {
+      try {
+        const newItems = [...this.products]; // clone the array
+        let idx = newItems.indexOf(product);
+        let currentQty = newItems[idx].qty;
+
+        if (action == "more") {
+          newItems[idx].qty = currentQty + 1;
+        } else if (action == "less") {
+          newItems[idx].qty = currentQty > 1 ? currentQty - 1 : 1;
+        }
+
+        this.products = newItems; // set new state
+      } catch (error) {
+        alert(error);
       }
-      return 0;
     },
     handleDelete: function (item) {
-      let idx = this.items.indexOf(item);
-      Alert.alert(
-        "Are you sure you want to delete this item from your cart?",
-        "",
-        [
-          {
-            text: "Cancel",
-            onPress: () => console.log("Cancel Pressed"),
-            style: "cancel",
-          },
-          {
-            text: "Delete",
-            onPress: () => {
-              let updatedCart = this.items; /* Clone it first */
-              updatedCart.splice(item[idx].id);
-              this.setState(updatedCart); /* Update the state */
+      try {
+        let idx = this.items.indexOf(item);
+        Alert.alert(
+          "Are you sure you want to delete this item from your cart?",
+          "",
+          [
+            {
+              text: "Cancel",
+              onPress: () => console.log("Cancel Pressed"),
+              style: "cancel",
             },
-          },
-        ],
-        { cancelable: false }
-      );
+            {
+              text: "Delete",
+              onPress: () => {
+                store.dispatch("removeItem", idx);
+              },
+            },
+          ],
+          { cancelable: false }
+        );
+      } catch (error) {
+        alert(error);
+      }
     },
     goBack: function () {
       this.navigation.goBack();

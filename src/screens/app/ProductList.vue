@@ -43,11 +43,16 @@
               </nb-left>
 
               <nb-right>
-                <nb-button transparent :onPress="() => addToCart(product)">
+                <nb-button transparent :on-press="() => toggleCart(product)">
                   <nb-icon
                     name="cart"
                     :style="{ fontSize: 25, color: defaultColor }"
-                    active
+                    v-if="!product.isAddedToCart"
+                  ></nb-icon>
+                  <nb-icon
+                    name="cart"
+                    :style="{ fontSize: 25, color: 'gray' }"
+                    v-if="product.isAddedToCart"
                   ></nb-icon>
                 </nb-button>
               </nb-right>
@@ -62,19 +67,20 @@
 <script>
 import React from "react";
 import { Text } from "react-native";
-import * as SQLite from "expo-sqlite";
 import firebase from "firebase";
 import store from "./../../store";
 
 export default {
   mounted() {
-    this.listenForProducts();
+    setTimeout(() => {
+      this.listenForProducts();
+    }, 1000);
   },
+
   data() {
     return {
       defaultColor: "#1b4f72",
       supplierID: this.navigation.getParam("supplierID"),
-      isAddedToCart: false,
       productList: [],
       stylesObj: {
         cardItemImage: {
@@ -89,6 +95,13 @@ export default {
       type: Object,
     },
   },
+
+  /* computed: {
+    products() {
+      return store.getters.products;
+    },
+  }, */
+
   methods: {
     viewProduct: function (product) {
       const productID = product.productID;
@@ -96,6 +109,7 @@ export default {
       const productImage = product.productImage;
       const productDescription = product.productDescription;
       const unitPrice = product.unitPrice;
+      const supplierID = product.supplierID;
 
       this.navigation.navigate("ProductDetails", {
         productID: productID,
@@ -103,18 +117,43 @@ export default {
         productDescription: productDescription,
         productImage: productImage,
         unitPrice: unitPrice,
+        supplierID: supplierID,
       });
     },
-    addToCart: function (product) {
-      const cartItem = [
-        product.productID,
-        product.productName,
-        product.unitPrice,
-      ];
-      this.$store.commit(cartItem, "cartItems");
+    toggleCart(product) {
+      try {
+        let idx = this.productList.indexOf(product);
+        if (product.index === idx) {
+          product.isAddedToCart = !product.isAddedToCart;
+          console.log("Press 1", product.isAddedToCart);
+          this.addToCart(product);
+        }
+      } catch (error) {
+        alert(error);
+      }
+    },
+    addToCart(product) {
+      let idx = this.productList.indexOf(product);
+      if (product.isAddedToCart == true) {
+        store.dispatch("removeItem", idx);
+      } else {
+        store.dispatch("addItem", product);
+      }
     },
     goBack: function () {
       this.navigation.goBack();
+    },
+    toggleCart(product) {
+      try {
+        let idx = this.productList.indexOf(product);
+        if (product.index === idx) {
+          product.isAddedToCart = !product.isAddedToCart;
+          console.log("Press 1", product.isAddedToCart);
+          this.addToCart(product);
+        }
+      } catch (error) {
+        alert(error);
+      }
     },
     getProductList: function () {
       return firebase.firestore().collection("PRODUCTS");
@@ -122,22 +161,29 @@ export default {
     listenForProducts: function () {
       try {
         //  var user = firebase.auth().currentUser;
-        this.getProductList().onSnapshot((querySnapshot) => {
-          const products = [];
-          querySnapshot.forEach((doc) => {
-            if (doc.data().supplierID == this.supplierID) {
-              products.push({
-                productID: doc.id,
-                supplierID: doc.data().supplierID,
-                productName: doc.data().productName,
-                supplierName: doc.data().supplierName,
-                productImage: doc.data().productImage,
-                unitPrice: doc.data().unitPrice,
-              });
-            }
+        this.getProductList()
+          .get()
+          .then((querySnapshot) => {
+            const products = [];
+            let idx = 0;
+            querySnapshot.forEach((doc) => {
+              if (doc.data().supplierID == this.supplierID) {
+                products.push({
+                  index: idx++,
+                  productID: doc.id,
+                  productQuantity: doc.data().productQuantity,
+                  supplierID: doc.data().supplierID,
+                  productName: doc.data().productName,
+                  supplierName: doc.data().supplierName,
+                  productImage: doc.data().productImage,
+                  unitPrice: doc.data().unitPrice,
+                  isAddedToCart: doc.data().isAddedToCart,
+                });
+              }
+            });
+            this.productList = products;
+            console.log(this.productList);
           });
-          this.productList = products;
-        });
       } catch (err) {
         alert(err);
       }
@@ -177,5 +223,13 @@ export default {
 .card-item-image {
   flex: 1;
   height: 300;
+}
+.added {
+  color: #1b4f72;
+  font-size: 25px;
+}
+.notAdded {
+  color: gray;
+  font-size: 25px;
 }
 </style>

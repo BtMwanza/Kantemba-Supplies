@@ -1,17 +1,29 @@
-import { fetchPosts } from './fetch';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import firebase from "firebase";
 import Fire from './../api/firebaseAPI'
 
-// ensure data for rendering given list type
-export function FETCH_LIST_DATA({ commit, dispatch }, { type }) {
+export function FETCH_LIST_DATA({ commit, state }, { type }) {
   commit('FETCHING_LISTS');
-  return fetchPosts(type)
-    .then(posts => {
-      return commit('SET_POSTS', { posts })
+
+  firebase.firestore().collection("PRODUCTS").onSnapshot((querySnapshot) => {
+    const productList = [];
+    querySnapshot.forEach((doc) => {
+      products.push({
+        productID: doc.id,
+        productQuantity: doc.data().productQuantity,
+        supplierID: doc.data().supplierID,
+        productName: doc.data().productName,
+        supplierName: doc.data().supplierName,
+        productImage: doc.data().productImage,
+        unitPrice: doc.data().unitPrice,
+      });
+    });
+    state.products = productList;
+  })
+    .then(productList => {
+      return commit('SET_PRODUCTS', { productList })
     });
 }
-
 
 export function REGISTER({ commit, state }, { userObj, navigate }) {
   commit('LOGGING_IN', true)
@@ -60,10 +72,10 @@ export function LOGOUT({ commit, state }, callback) {
   })
 }
 
-export function addItem(context, id) {
-      context.commit("ADD_Item", id);
-    }
+export function addItem(context, product) {
+  context.commit("ADD_ITEM", product);
+}
 
-export function  removeItem(context, index) {
-      context.commit("REMOVE_Item", index);
-    },
+export function removeItem(context, index) {
+  context.commit("REMOVE_ITEM", index);
+}

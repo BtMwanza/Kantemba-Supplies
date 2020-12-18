@@ -96,9 +96,15 @@ class Fire {
     }
   };
 
+
+  getProductList() {
+    return firebase.firestore().collection("PRODUCTS");
+  }
+
   ref() {
     return firebase.database().ref();
   }
+
   refOn = callback => {
     this.ref
       .limitToLast(20)

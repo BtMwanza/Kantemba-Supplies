@@ -38,7 +38,9 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default {
   mounted: function () {
-    this.listenForSuppliers();
+    setTimeout(() => {
+      this.listenForSuppliers();
+    }, 1000);
   },
   data() {
     return {
@@ -75,16 +77,18 @@ export default {
     listenForSuppliers: function () {
       try {
         //  var user = firebase.auth().currentUser;
-        this.getSupplierList().onSnapshot((querySnapshot) => {
-          const suppliers = [];
-          querySnapshot.forEach((doc) => {
-            suppliers.push({
-              uid: doc.data().uid,
-              supplierName: doc.data().name,
+        this.getSupplierList()
+          .get()
+          .then((querySnapshot) => {
+            const suppliers = [];
+            querySnapshot.forEach((doc) => {
+              suppliers.push({
+                uid: doc.data().uid,
+                supplierName: doc.data().name,
+              });
             });
+            this.listOfSuppliers = suppliers;
           });
-          this.listOfSuppliers = suppliers;
-        });
       } catch (err) {
         alert(err);
       }

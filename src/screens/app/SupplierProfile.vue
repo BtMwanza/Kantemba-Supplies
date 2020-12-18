@@ -15,7 +15,7 @@
 
     <!-- Body -->
     <nb-grid>
-      <nb-content v-for="(supplier, uid) in supplier" :key="uid">
+      <nb-content v-for="(supplier, supplierID) in supplier" :key="supplierID">
         <image
           :style="{
             flex: 1,
@@ -87,7 +87,9 @@ import firebase from "firebase";
 
 export default {
   mounted: function () {
-    this.listenForSuppliers();
+    setTimeout(() => {
+      this.listenForSuppliers();
+    });
   },
   props: {
     navigation: {
@@ -97,7 +99,6 @@ export default {
   data: function () {
     return {
       defaultColor: "#1b4f72",
-      cardImage,
       stylesObj: {
         cardItemImage: {
           resizeMode: "cover",
@@ -118,27 +119,29 @@ export default {
     listenForSuppliers: function () {
       try {
         //  var user = firebase.auth().currentUser;
-        this.getSupplierList().onSnapshot((querySnapshot) => {
-          const supplier = [];
-          querySnapshot.forEach((doc) => {
-            if (doc.id == this.supplierID) {
-              supplier.push({
-                supplierID: doc.data().uid,
-                supplierName: doc.data().name,
-                logo: doc.data().avatar,
-                address1: doc.data().address1,
-                address2: doc.data().address2,
-                website: doc.data().website,
-                email: doc.data().email,
-                city: doc.data().city,
-                phoneNumber: doc.data().phoneNumber,
-                registrationID: doc.data().registrationID,
-                activityStatus: doc.data().activityStatus,
-              });
-            }
+        this.getSupplierList()
+          .get()
+          .then((querySnapshot) => {
+            const supplier = [];
+            querySnapshot.forEach((doc) => {
+              if (doc.id == this.supplierID) {
+                supplier.push({
+                  supplierID: doc.data().uid,
+                  supplierName: doc.data().name,
+                  logo: doc.data().avatar,
+                  address1: doc.data().address1,
+                  address2: doc.data().address2,
+                  website: doc.data().website,
+                  email: doc.data().email,
+                  city: doc.data().city,
+                  phoneNumber: doc.data().phoneNumber,
+                  registrationID: doc.data().registrationID,
+                  activityStatus: doc.data().activityStatus,
+                });
+              }
+            });
+            this.supplier = supplier;
           });
-          this.supplier = supplier;
-        });
       } catch (err) {
         alert(err);
       }
