@@ -15,7 +15,7 @@
       </nb-body>
 
       <nb-right>
-        <nb-button bordered info :onPress="() => checkout(item)">
+        <nb-button bordered info :onPress="() => checkout(this.totalPrice)">
           <nb-text :style="{ color: '#fff' }">Checkout</nb-text>
         </nb-button>
       </nb-right>
@@ -111,9 +111,11 @@ export default {
   },
 
   methods: {
-    checkout: function () {
+    checkout: function (totalPrice) {
       try {
-        alert("Checkout Pressed!");
+        const totalPrice = this.totalPrice;
+        alert("Checkout Pressed!", totalPrice);
+        console.log(totalPrice);
       } catch (error) {
         alert(error);
       }
@@ -135,9 +137,9 @@ export default {
         alert(error);
       }
     },
-    handleDelete: function (item) {
+    handleDelete: function (product) {
       try {
-        let idx = this.items.indexOf(item);
+        let idx = this.products.indexOf(product);
         Alert.alert(
           "Are you sure you want to delete this item from your cart?",
           "",

@@ -137,7 +137,7 @@ export default {
 };
 </script>
 
-<style>
+<style >
 .card-item-image {
   flex: 1;
   height: 300;

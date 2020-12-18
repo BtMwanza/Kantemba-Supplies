@@ -45,9 +45,22 @@ import React from "react";
 import { Alert } from "react-native";
 import { CreditCardInput } from "react-native-credit-card-input";
 import axios from "axios";
+import store from "./../../store";
 
 export default {
   components: { CreditCardInput },
+  computed: {
+    products() {
+      return store.getters.storeCart;
+    },
+
+    totalPrice() {
+      return store.getters.storeCart.reduce(
+        (acc, el) => acc + el.unitPrice * el.productQuantity,
+        0
+      );
+    },
+  },
   // Declare `navigation` as a prop
   props: {
     navigation: {
@@ -63,7 +76,6 @@ export default {
   data: function () {
     return {
       defaultColor: "#1b4f72",
-      totalPrice: 100,
       response: "",
       paymentStatus: "",
       hasMadePayment: false,
