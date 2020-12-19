@@ -53,7 +53,7 @@ export function SET_USER({ commit, state }, { userObj }) {
   return commit('LOGIN_SUCCESFULL', { userObj })
 }
 
-export function LOGOUT({ commit, state }, callback) {
+/* export function LOGOUT({ commit, state }, callback) {
   return new Promise((resolve, reject) => {
     //  const keys = ['firstName', 'lastName', 'otherName', 'address', 'city', 'shopeName', 'email', 'password']
     firebase.auth().signOut().then(() => {
@@ -61,7 +61,7 @@ export function LOGOUT({ commit, state }, callback) {
       resolve();
     })
   })
-}
+} */
 
 export function addItem(context, product) {
   context.commit("ADD_ITEM", product);
@@ -82,7 +82,11 @@ export function getCurrentUser({ commit }) {
 
 }
 
-export function clearUserData({ commit }) {
+export function LOGOUT({ commit }) {
+  firebase.auth().signOut().then(() => {
+    callback();
+    resolve();
+  })
   commit('setUserId', '');
   commit('setUserName', '');
   commit('setUserEmail', '');
