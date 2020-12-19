@@ -87,14 +87,16 @@ export function getCurrentUser({ commit }) {
 
 export function LOGOUT({ commit }) {
   firebase.auth().signOut().then(() => {
-    callback();
-    resolve();
   })
   commit('setUserId', '');
   commit('setUserName', '');
   commit('setUserEmail', '');
   commit('setUserUid', '');
   commit('setUserStatus', 0);
+}
+
+export function CLEARCART({ commit }) {
+  return commit("clearCart")
 }
 
 

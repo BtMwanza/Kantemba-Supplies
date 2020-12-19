@@ -157,7 +157,16 @@ export default {
       this.navigation.navigate("Login");
     },
     register: function () {
-      if (this.password == this.confirmPassword) {
+      if (
+        this.firstName !== "" &&
+        this.lastName !== "" &&
+        this.address !== "" &&
+        this.city !== "" &&
+        this.phoneNumber !== "" &&
+        this.password !== "" &&
+        this.confirmPassword !== "" &&
+        this.password == this.confirmPassword
+      ) {
         Fire.shared.createUser(
           this.firstName,
           this.lastName,
@@ -168,41 +177,11 @@ export default {
           this.email,
           this.password
         );
-        console.log(store.state.userObj);
       } else {
-        Toast.show({
-          text: "Please Check Your Input",
-          buttonText: "OK",
-        });
+        alert("Please Fill In The Form");
       }
     },
   },
-  /* validations: {
-    firstName: {
-      required,
-    },
-    lastName: {
-      required,
-    },
-    city: {
-      required,
-    },
-    address: {
-      required,
-    },
-    phoneNumber: {
-      required,
-    },
-    email: {
-      required,
-    },
-    password: {
-      required,
-    },
-    confirmPassword: {
-      required,
-    },
-  }, */
 };
 </script>
 

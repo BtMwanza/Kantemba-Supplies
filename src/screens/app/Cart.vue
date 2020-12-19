@@ -120,16 +120,22 @@ export default {
       // Increase or decrease quantity of product
       try {
         const newItems = [...this.products]; // clone the array
-        let idx = newItems.indexOf(product);
+        let idx = this.products.indexOf(product);
         let currentQty = newItems[idx].productQuantity;
+        let price = newItems[idx].unitPrice;
+        let perQtyPrice = price / currentQty;
 
         if (action == "more") {
           newItems[idx].productQuantity = currentQty + 1;
+          newItems[idx].unitPrice += perQtyPrice;
         } else if (action == "less") {
           newItems[idx].productQuantity = currentQty > 1 ? currentQty - 1 : 1;
+          // Decrease current price using the initial price
+          newItems[idx].unitPrice -= perQtyPrice;
         }
 
         this.products = newItems; // set new state
+        console.log(this.products);
       } catch (error) {
         alert(error);
       }

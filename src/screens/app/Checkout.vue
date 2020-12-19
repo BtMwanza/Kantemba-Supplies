@@ -48,6 +48,7 @@ import axios from "axios";
 import store from "./../../store";
 import { v4 as uuidv4 } from "uuid";
 import firebase from "firebase";
+import moment from "moment";
 
 export default {
   components: { CreditCardInput },
@@ -102,10 +103,12 @@ export default {
           },
           {
             text: "Yes",
-            onPress: () =>
-              this.recordReceipt().then(() => {
-                alert("Payment made");
-              }),
+            onPress: () => {
+              this.recordReceipt();
+              alert("Payment made");
+              store.dispatch("CLEARCART");
+              this.navigation.navigate("Home");
+            },
           },
         ],
         { cancelable: false }
@@ -122,12 +125,18 @@ export default {
         const user = firebase.auth().currentUser;
         var uuid = uuidv4();
         const cartID = `${uuid}`;
-        firebase.firestore().collection("CART").doc(user.uid).set({
-          cartID: cartID,
-          for: user.uid,
-          cartRecord: this.products,
-          totalPrice: this.totalPrice,
-        });
+        firebase
+          .firestore()
+          .collection("CART")
+          .doc()
+          .set({
+            cartID: cartID,
+            for: user.uid,
+            productID: this.products.productID,
+            cartRecord: this.products,
+            totalPrice: this.totalPrice,
+            date: moment().format("lll"),
+          });
       } catch (error) {
         alert(error);
       }

@@ -110,10 +110,14 @@ export default {
       let email = this.email;
       let password = this.password;
 
-      try {
-        firebase.auth().signInWithEmailAndPassword(email.trim(), password);
-      } catch (err) {
-        alert("Error: ", err.message);
+      if (email == "" && password == "") {
+        alert("Please Fill In The Form");
+      } else {
+        try {
+          firebase.auth().signInWithEmailAndPassword(email.trim(), password);
+        } catch (err) {
+          alert("Error: ", err.message);
+        }
       }
     },
   },

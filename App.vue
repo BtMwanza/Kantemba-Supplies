@@ -26,6 +26,8 @@ import {
   Cart,
   Checkout,
   ProductDetails,
+  History,
+  ViewHistory,
 } from "./src/screens";
 import store from "./src/store";
 import Vue from "vue-native-core";
@@ -57,6 +59,9 @@ const AppTabs = createBottomTabNavigator(
     Checkout: {
       screen: Checkout,
     },
+    History: {
+      screen: History,
+    },
   },
   {
     defaultNavigationOptions: ({ navigation }) => ({
@@ -72,8 +77,8 @@ const AppTabs = createBottomTabNavigator(
           iconName = `ios-cart`;
         } else if (routeName === "Checkout") {
           iconName = `ios-checkmark-circle-outline`;
-        } else if (routeName === "Suppliers") {
-          iconName = `ios-people`;
+        } else if (routeName === "History") {
+          iconName = `ios-clock`;
         }
 
         // You can return any component that you like here!
@@ -93,6 +98,7 @@ const AppContainer = createStackNavigator(
     ProductDetails: ProductDetails,
     ProductList: ProductList,
     SupplierProfile: SupplierProfile,
+    ViewHistory: ViewHistory,
   },
   {
     initialRouteName: "Tabs",

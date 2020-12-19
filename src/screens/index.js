@@ -1,5 +1,7 @@
 export { default as Home } from './app/Home';
 export { default as UserProfile } from './app/UserProfile';
+export { default as History } from './app/History';
+export { default as ViewHistory } from './app/ViewHistory';
 export { default as SupplierProfile } from './app/SupplierProfile';
 export { default as ProductDetails } from './app/ProductDetails';
 export { default as ProductList } from './app/ProductList';

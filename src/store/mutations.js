@@ -54,3 +54,6 @@ export function setUserUid(state, data) {
 export function setUserStatus(state, data) {
   state.user.status = data
 }
+export function clearCart(state) {
+  state.storeCart = []
+}
