@@ -88,24 +88,22 @@ export default {
     listenForRecords: function () {
       try {
         var user = firebase.auth().currentUser;
-        this.getHistory()
-          .get()
-          .then((querySnapshot) => {
-            const records = [];
-            querySnapshot.forEach((doc) => {
-              if (doc.data().for == user.uid) {
-                records.push({
-                  recordID: doc.id,
-                  cartID: doc.data().cartID,
-                  cartRecord: doc.data().cartRecord,
-                  uid: doc.data().for,
-                  date: doc.data().date,
-                });
-              }
-            });
-            this.records = records;
-            console.log(this.records);
+        this.getHistory().onSnapshot((querySnapshot) => {
+          const records = [];
+          querySnapshot.forEach((doc) => {
+            if (doc.data().for == user.uid) {
+              records.push({
+                recordID: doc.id,
+                cartID: doc.data().cartID,
+                cartRecord: doc.data().cartRecord,
+                uid: doc.data().for,
+                date: moment(doc.data().date).format("lll"),
+              });
+            }
           });
+          this.records = records;
+          console.log(this.records);
+        });
       } catch (err) {
         alert(err);
       }

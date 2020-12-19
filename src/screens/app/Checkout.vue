@@ -125,18 +125,13 @@ export default {
         const user = firebase.auth().currentUser;
         var uuid = uuidv4();
         const cartID = `${uuid}`;
-        firebase
-          .firestore()
-          .collection("CART")
-          .doc()
-          .set({
-            cartID: cartID,
-            for: user.uid,
-            productID: this.products.productID,
-            cartRecord: this.products,
-            totalPrice: this.totalPrice,
-            date: moment().format("lll"),
-          });
+        firebase.firestore().collection("CART").doc().set({
+          cartID: cartID,
+          for: user.uid,
+          cartRecord: this.products,
+          totalPrice: this.totalPrice,
+          date: Date.now(),
+        });
       } catch (error) {
         alert(error);
       }

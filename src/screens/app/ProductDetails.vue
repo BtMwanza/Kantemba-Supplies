@@ -110,20 +110,15 @@ export default {
     goBack: function () {
       this.navigation.goBack();
     },
-    getEmail: function () {
-      AsyncStorage.multiGet(["email"]).then((val) => {
-        if (val) {
-          this.userEmail = { val };
-        }
-      });
-    },
     sendEnquiry: function () {
+      const user = firebase.auth().currentUser;
       try {
         firebase
           .firestore()
           .collection("ENQUIRIES")
+          .doc()
           .set({
-            user: this.userEmail,
+            user: user.uid,
             productID: this.navigation.getParam("productID"),
             to: this.navigation.getParam("supplierID"),
             message: this.message,
