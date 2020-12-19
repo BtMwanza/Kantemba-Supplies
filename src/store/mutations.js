@@ -17,7 +17,7 @@ export function LOGIN_SUCCESFULL(state, { userObj }) {
 }
 
 export function ADD_ITEM(state, product) {
-  //  state.isAdded = true;
+  // If item with the same ID exists in the cart, then increment the quantity
   const added = state.storeCart.find(p => p.productID === product.productID)
   if (!added) {
     state.storeCart.push(product);

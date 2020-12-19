@@ -63,14 +63,17 @@ export function SET_USER({ commit, state }, { userObj }) {
   })
 } */
 
+// Add items to the cart
 export function addItem(context, product) {
   context.commit("ADD_ITEM", product);
 }
 
+// Remove cart items
 export function removeItem(context, index) {
   context.commit("REMOVE_ITEM", index);
 }
 
+// Get current user from firebase
 export function getCurrentUser({ commit }) {
   const user = firebase.auth().currentUser;
   if (user != null) {

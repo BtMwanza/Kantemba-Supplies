@@ -115,15 +115,16 @@ export default {
       this.navigation.navigate("Checkout");
     },
     quantityHandler: function (action, product) {
+      // Increase or decrease quantity of product
       try {
         const newItems = [...this.products]; // clone the array
         let idx = newItems.indexOf(product);
-        let currentQty = newItems[idx].qty;
+        let currentQty = newItems[idx].productQuantity;
 
         if (action == "more") {
-          newItems[idx].qty = currentQty + 1;
+          newItems[idx].productQuantity = currentQty + 1;
         } else if (action == "less") {
-          newItems[idx].qty = currentQty > 1 ? currentQty - 1 : 1;
+          newItems[idx].productQuantity = currentQty > 1 ? currentQty - 1 : 1;
         }
 
         this.products = newItems; // set new state
