@@ -46,6 +46,8 @@ import { Alert } from "react-native";
 import { CreditCardInput } from "react-native-credit-card-input";
 import axios from "axios";
 import store from "./../../store";
+import { v4 as uuidv4 } from "uuid";
+import firebase from "firebase";
 
 export default {
   components: { CreditCardInput },
@@ -100,7 +102,10 @@ export default {
           },
           {
             text: "Yes",
-            onPress: () => alert("Payment made"),
+            onPress: () =>
+              this.recordReceipt().then(() => {
+                alert("Payment made");
+              }),
           },
         ],
         { cancelable: false }
@@ -111,6 +116,21 @@ export default {
     },
     goBack: function () {
       this.navigation.goBack();
+    },
+    recordReceipt: function () {
+      try {
+        const user = firebase.auth().currentUser;
+        var uuid = uuidv4();
+        const cartID = `${uuid}`;
+        firebase.firestore().collection("CART").doc(user.uid).set({
+          cartID: cartID,
+          for: user.uid,
+          cartRecord: this.products,
+          totalPrice: this.totalPrice,
+        });
+      } catch (error) {
+        alert(error);
+      }
     },
   },
 };

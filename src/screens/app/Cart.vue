@@ -15,7 +15,7 @@
       </nb-body>
 
       <nb-right>
-        <nb-button bordered info :onPress="() => checkout(this.totalPrice)">
+        <nb-button bordered info :onPress="() => checkout(this.products)">
           <nb-text :style="{ color: '#fff' }">Checkout</nb-text>
         </nb-button>
       </nb-right>
@@ -82,6 +82,8 @@ import React from "react";
 import { Alert } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import store from "./../../store";
+import { v4 as uuidv4 } from "uuid";
+import firebase from "firebase";
 
 export default {
   // Declare `navigation` as a prop
@@ -111,7 +113,7 @@ export default {
   },
 
   methods: {
-    checkout: function (totalPrice) {
+    checkout: function (products) {
       this.navigation.navigate("Checkout");
     },
     quantityHandler: function (action, product) {
