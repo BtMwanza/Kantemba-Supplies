@@ -112,13 +112,7 @@ export default {
 
   methods: {
     checkout: function (totalPrice) {
-      try {
-        const totalPrice = this.totalPrice;
-        alert("Checkout Pressed!", totalPrice);
-        console.log(totalPrice);
-      } catch (error) {
-        alert(error);
-      }
+      this.navigation.navigate("Checkout");
     },
     quantityHandler: function (action, product) {
       try {

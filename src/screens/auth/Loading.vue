@@ -1,7 +1,9 @@
 <template>
-  <view class="container" v-if="logging_in && isLoading">
-    <nb-text>Loading</nb-text>
-    <activity-indicator size="large" color="#0000ff" />
+  <view class="container">
+    <view v-if="isLoading">
+      <nb-text>Loading</nb-text>
+      <activity-indicator size="large" color="#0000ff" />
+    </view>
   </view>
 </template>
 
@@ -9,6 +11,7 @@
 import firebase from "firebase";
 import Fire from "./../../api/firebaseAPI";
 import store from "./../../store";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default {
   // Declare `navigation` as a prop
@@ -23,9 +26,29 @@ export default {
     };
   },
   computed: {
-    logging_in() {
-      return store.state.logging_in;
+    userUid() {
+      return store.getters.userUid;
     },
+  },
+  methods: {
+    login: function () {
+      firebase.auth().onAuthStateChanged((user) => {
+        /* if (user) {
+          this.navigation.navigate("App");
+        } else {
+          this.navigation.navigate("Auth");
+        } */
+        this.navigation.navigate(user ? "App" : "Auth");
+      });
+    },
+  },
+  mounted() {
+    setTimeout(() => {
+      this.login();
+    }, 2000);
+    /* await checkAuth(function () {
+      this.navigation.navigate(this.userUid ? "App" : "Auth");
+    }); */
   },
 };
 </script>

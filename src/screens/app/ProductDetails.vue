@@ -114,7 +114,6 @@ export default {
       AsyncStorage.multiGet(["email"]).then((val) => {
         if (val) {
           this.userEmail = { val };
-          console.log(this.userEmail);
         }
       });
     },

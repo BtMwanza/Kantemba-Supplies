@@ -88,38 +88,6 @@ export default {
     };
   },
   methods: {
-    onCheckStatus: async function (paymentResponse) {
-      this.paymentStatus = "Please wait while confirming your payment!";
-      this.response = paymentResponse;
-
-      let jsonResponse = JSON.parse(paymentResponse);
-      // perform operation to check payment status
-
-      try {
-        const stripeResponse = await axios.post(
-          "http://localhost:8000/payment",
-          {
-            email: "codergogoi@gmail.com",
-            product: cartInfo,
-            authToken: jsonResponse,
-          }
-        );
-
-        if (stripeResponse) {
-          const { paid } = stripeResponse.data;
-          if (paid === true) {
-            this.paymentStatus = "Payment Success";
-          } else {
-            this.paymentStatus = "Payment failed due to some issue";
-          }
-        } else {
-          this.paymentStatus = " Payment failed due to some issue";
-        }
-      } catch (error) {
-        console.log(error);
-        this.paymentStatus = "Payment failed due to some issue";
-      }
-    },
     checkout: function () {
       Alert.alert(
         "Payment",
@@ -130,7 +98,10 @@ export default {
             onPress: () => alert("Payment Cancelled"),
             style: "cancel",
           },
-          { text: "Yes", onPress: () => this.makePayment() },
+          {
+            text: "Yes",
+            onPress: () => alert("Payment made"),
+          },
         ],
         { cancelable: false }
       );

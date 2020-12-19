@@ -6,6 +6,12 @@
       <nb-body>
         <nb-title>Home</nb-title>
       </nb-body>
+
+      <nb-right>
+        <nb-button bordered info :on-press="() => logout()">
+          <nb-text :style="{ color: '#fff' }">Logout</nb-text>
+        </nb-button>
+      </nb-right>
     </nb-header>
 
     <!-- Body -->
@@ -35,12 +41,22 @@ import React from "react";
 import { Text } from "react-native";
 import firebase from "firebase";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import store from "./../../store";
+import { NavigationActions, StackActions } from "vue-native-router";
 
 export default {
   mounted: function () {
     setTimeout(() => {
       this.listenForSuppliers();
     }, 1000);
+  },
+  computed: {
+    userData() {
+      return store.state.userObj;
+    },
+    isLoggedIn() {
+      return store.state.logging_in;
+    },
   },
   data() {
     return {
@@ -68,8 +84,8 @@ export default {
         supplierName: supplierName,
       });
     },
-    addToCart: function () {
-      alert("Added to Cart");
+    logout() {
+      store.dispatch("LOGOUT", () => this.navigation.navigate("Login"));
     },
     getSupplierList: function () {
       return firebase.firestore().collection("SUPPLIERS");

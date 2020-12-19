@@ -125,7 +125,6 @@ export default {
         let idx = this.productList.indexOf(product);
         if (product.index === idx) {
           product.isAddedToCart = !product.isAddedToCart;
-          console.log("Press 1", product.isAddedToCart);
           this.addToCart(product);
         }
       } catch (error) {
@@ -148,7 +147,6 @@ export default {
         let idx = this.productList.indexOf(product);
         if (product.index === idx) {
           product.isAddedToCart = !product.isAddedToCart;
-          console.log("Press 1", product.isAddedToCart);
           this.addToCart(product);
         }
       } catch (error) {
@@ -182,7 +180,6 @@ export default {
               }
             });
             this.productList = products;
-            console.log(this.productList);
           });
       } catch (err) {
         alert(err);

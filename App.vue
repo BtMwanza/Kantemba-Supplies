@@ -21,25 +21,26 @@ import {
   SignIn,
   SignUp,
   SupplierProfile,
-  Receipt,
   ProductList,
-  Suppliers,
   Loading,
   Cart,
   Checkout,
   ProductDetails,
 } from "./src/screens";
+import store from "./src/store";
 import Vue from "vue-native-core";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { VueNativeBase } from "native-base";
 import Vuelidate from "vuelidate";
-import firebase from "firebase";
 import * as Font from "expo-font";
 import { AppLoading } from "expo";
+import Axios from "axios";
+import firebase from "firebase";
 
 // registering all native-base components to the global scope of the Vue
 Vue.use(VueNativeBase);
 Vue.use(Vuelidate);
+Vue.use(firebase);
 
 // Bottom Tabs
 const AppTabs = createBottomTabNavigator(
@@ -56,9 +57,6 @@ const AppTabs = createBottomTabNavigator(
     Checkout: {
       screen: Checkout,
     },
-    /*     Suppliers: {
-      screen: Suppliers,
-    }, */
   },
   {
     defaultNavigationOptions: ({ navigation }) => ({
@@ -94,7 +92,6 @@ const AppContainer = createStackNavigator(
     Tabs: AppTabs,
     ProductDetails: ProductDetails,
     ProductList: ProductList,
-    Receipt: Receipt,
     SupplierProfile: SupplierProfile,
   },
   {
@@ -116,12 +113,12 @@ const AuthStack = createStackNavigator(
 const AppNavigator = createAppContainer(
   createSwitchNavigator(
     {
-      //  Loading: Loading,
+      Loading: Loading,
       Auth: AuthStack,
       App: AppContainer,
     },
     {
-      initialRouteName: "App",
+      initialRouteName: "Loading",
     }
   )
 );
@@ -133,12 +130,13 @@ export default {
       loaded: false,
     };
   },
-  mounted: async function () {
+  async mounted() {
     await Font.loadAsync({
       Roboto: require("native-base/Fonts/Roboto.ttf"),
       Roboto_medium: require("native-base/Fonts/Roboto_medium.ttf"),
     });
     this.loaded = true;
+    store.dispatch("getCurrentUser");
   },
 };
 </script>

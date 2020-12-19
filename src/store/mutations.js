@@ -25,12 +25,32 @@ export function ADD_ITEM(state, product) {
     added.productQuantity++
   }
 
-  console.log('ADDED', JSON.stringify(state.storeCart));
+  console.log('ADDED', state.storeCart);
 
 }
 
 export function REMOVE_ITEM(state, idx) {
   //  state.isAdded = false;
   state.storeCart.splice(idx, 1);
-  console.log('NEW CART', JSON.stringify(state.storeCart));
+  console.log('NEW CART', state.storeCart);
+}
+
+export function setUserId(state, data) {
+  state.user.id = data
+}
+
+export function setUserName(state, data) {
+  state.user.name = data
+}
+
+export function setUserEmail(state, data) {
+  state.user.email = data
+}
+
+export function setUserUid(state, data) {
+  state.user.uid = data
+}
+
+export function setUserStatus(state, data) {
+  state.user.status = data
 }

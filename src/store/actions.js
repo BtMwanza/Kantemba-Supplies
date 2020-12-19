@@ -30,17 +30,8 @@ export function REGISTER({ commit, state }, { userObj, navigate }) {
   return new Promise((resolve, reject) => {
     setTimeout(() => {
       commit('LOGIN_SUCCESFULL', { userObj })
-      const firstName = ['firstName', userObj.firstName]
-      const lastName = ['lastName', userObj.lastName]
-      const otherName = ['otherName', userObj.otherName]
-      const address = ['address', userObj.address]
-      const city = ['city', userObj.city]
-      const shopName = ['shopName', userObj.shopName]
-      const email = ['email', userObj.email]
-      const password = ['password', userObj.password]
-
-      AsyncStorage.multiSet([firstName, lastName, otherName, address, city, shopName, email, password])
-      navigate('Home');
+      console.log("Checking:", userObj.email)
+      //   navigate('Home');
       resolve();
     }, 1000)
   })
@@ -51,8 +42,8 @@ export function LOGIN({ commit, state }, { userObj, navigate }) {
   return new Promise((resolve, reject) => {
     setTimeout(() => {
       commit('LOGIN_SUCCESFULL', { userObj })
-      AsyncStorage.setItem('email', userObj.email)
-      navigate('Home');
+      Fire.shared.signIn({ email: userObj.email, password: userObj.password })
+      //navigate('Home');
       resolve();
     }, 1000)
   })
@@ -64,8 +55,8 @@ export function SET_USER({ commit, state }, { userObj }) {
 
 export function LOGOUT({ commit, state }, callback) {
   return new Promise((resolve, reject) => {
-    const keys = ['firstName', 'lastName', 'otherName', 'address', 'city', 'shopeName', 'email', 'password']
-    AsyncStorage.multiRemove(keys).then(() => {
+    //  const keys = ['firstName', 'lastName', 'otherName', 'address', 'city', 'shopeName', 'email', 'password']
+    firebase.auth().signOut().then(() => {
       callback();
       resolve();
     })
@@ -79,3 +70,24 @@ export function addItem(context, product) {
 export function removeItem(context, index) {
   context.commit("REMOVE_ITEM", index);
 }
+
+export function getCurrentUser({ commit }) {
+  const user = firebase.auth().currentUser;
+  if (user != null) {
+    commit('setUserName', user.displayName);
+    commit('setUserEmail', user.email);
+    commit('setUserUid', user.uid);
+    commit('setUserStatus', 1);
+  }
+
+}
+
+export function clearUserData({ commit }) {
+  commit('setUserId', '');
+  commit('setUserName', '');
+  commit('setUserEmail', '');
+  commit('setUserUid', '');
+  commit('setUserStatus', 0);
+}
+
+

@@ -7366,6 +7366,11 @@ vue-native-template-compiler@^0.1.0:
     de-indent "^1.0.2"
     he "^1.1.0"
 
+vue-stripe-checkout@^3.5.13:
+  version "3.5.13"
+  resolved "https://registry.yarnpkg.com/vue-stripe-checkout/-/vue-stripe-checkout-3.5.13.tgz#d162c5f4c06c4778393dfb2710ce987e505fdabc"
+  integrity sha512-TJxfYFaNmQPOgXcBIFnsGDIhbfR1N31LkFPWXTSUs6pwAZjj7p++saJ2eoTxnDMIeIM/t/H4FmfhjB7e6lK3Lw==
+
 vuelidate@^0.7.6:
   version "0.7.6"
   resolved "https://registry.yarnpkg.com/vuelidate/-/vuelidate-0.7.6.tgz#84100c13b943470660d0416642845cd2a1edf4b2"

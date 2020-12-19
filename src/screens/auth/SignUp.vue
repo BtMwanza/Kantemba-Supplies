@@ -8,22 +8,20 @@
 
         <!-- Fisrtname -->
         <nb-form :style="{ margin: 10 }">
-          <nb-item last :error="!$v.firstName.required && $v.firstName.$dirty">
+          <nb-item last>
             <nb-input
               placeholder="First name"
               v-model="firstName"
               auto-capitalize="none"
-              :on-blur="() => $v.firstName.$touch()"
             />
           </nb-item>
 
           <!-- Lastname -->
-          <nb-item last :error="!$v.lastName.required && $v.lastName.$dirty">
+          <nb-item last>
             <nb-input
               placeholder="Last name"
               v-model="lastName"
               auto-capitalize="none"
-              :on-blur="() => $v.lastName.$touch()"
             />
           </nb-item>
 
@@ -33,79 +31,68 @@
               placeholder="Other names"
               v-model="otherName"
               auto-capitalize="none"
-              :on-blur="() => $v.otherName.$touch()"
             />
           </nb-item>
 
           <!-- Address -->
-          <nb-item last :error="!$v.address.required && $v.address.$dirty">
+          <nb-item last>
             <nb-input
               placeholder="Address"
               v-model="address"
               auto-capitalize="none"
-              :on-blur="() => $v.address.$touch()"
             />
           </nb-item>
 
           <!-- City -->
-          <nb-item last :error="!$v.city.required && $v.city.$dirty">
+          <nb-item last>
             <nb-input
               placeholder="City"
               v-model="city"
               auto-capitalize="none"
-              :on-blur="() => $v.city.$touch()"
             />
           </nb-item>
 
           <!-- Shop name -->
-          <nb-item last :error="!$v.shopName.required && $v.shopName.$dirty">
+          <nb-item last>
             <nb-input
-              placeholder="Shop name"
-              v-model="shopName"
+              placeholder="Phone Number"
+              v-model="phoneNumber"
               auto-capitalize="none"
-              :on-blur="() => $v.shopName.$touch()"
             />
           </nb-item>
 
           <!-- Email -->
-          <nb-item last :error="!$v.email.required && $v.email.$dirty">
+          <nb-item last>
             <nb-input
               placeholder="Email"
               v-model="email"
               auto-capitalize="none"
-              keyboard-type="email"
-              :on-blur="() => $v.email.$touch()"
             />
           </nb-item>
 
           <!-- Password -->
-          <nb-item last :error="!$v.password.required && $v.password.$dirty">
+          <nb-item last>
             <nb-input
               placeholder="Password"
               v-model="password"
               auto-capitalize="none"
               secure-text-entry
-              :on-blur="() => $v.password.$touch()"
             />
           </nb-item>
 
           <!-- Confirm Password -->
-          <nb-item
-            last
-            :error="!$v.confirmPassword.required && $v.confirmPassword.$dirty"
-          >
+          <nb-item last>
             <nb-input
               placeholder="Confirm Password"
               v-model="confirmPassword"
               auto-capitalize="none"
               secure-text-entry
-              :on-blur="() => $v.confirmPassword.$touch()"
             />
           </nb-item>
         </nb-form>
         <view :style="{ margin: 10 }">
           <nb-button block :on-press="register">
-            <nb-spinner v-if="logging_in" size="small" />
+            <nb-spinner v-if="isLoggedIn" size="small" />
             <nb-text>Register</nb-text>
           </nb-button>
         </view>
@@ -146,6 +133,11 @@ export default {
       type: Object,
     },
   },
+  computed: {
+    isLoggedIn() {
+      return store.state.logging_in;
+    },
+  },
   data: function () {
     return {
       email: "",
@@ -154,7 +146,7 @@ export default {
       otherName: "",
       city: "",
       address: "",
-      shopName: "",
+      phoneNumber: "",
       password: "",
       confirmPassword: "",
     };
@@ -172,31 +164,20 @@ export default {
           this.otherName,
           this.address,
           this.city,
-          this.shopName,
-          this.email
+          this.phoneNumber,
+          this.email,
+          this.password
         );
-        store.dispatch("REGISTER", {
-          userObj: [
-            { email: this.email },
-            { firstName: this.firstName },
-            { lastName: this.lastName },
-            { otherName: this.otherName },
-            { address: this.address },
-            { city: this.city },
-            { shopName: this.shopName },
-          ],
-          navigate: this.navigation.navigate,
-        });
-        this.navigation.navigate("Home");
+        console.log(store.state.userObj);
       } else {
         Toast.show({
-          text: "Invalid Email or Password",
-          buttonText: "Okay",
+          text: "Please Check Your Input",
+          buttonText: "OK",
         });
       }
     },
   },
-  validations: {
+  /* validations: {
     firstName: {
       required,
     },
@@ -209,7 +190,7 @@ export default {
     address: {
       required,
     },
-    shopName: {
+    phoneNumber: {
       required,
     },
     email: {
@@ -221,7 +202,7 @@ export default {
     confirmPassword: {
       required,
     },
-  },
+  }, */
 };
 </script>
 

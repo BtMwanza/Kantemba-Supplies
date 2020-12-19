@@ -29,7 +29,7 @@
         </nb-form>
         <view :style="{ margin: 10 }">
           <nb-button block :on-press="login">
-            <nb-spinner v-if="logging_in" size="small" />
+            <nb-spinner v-if="isLoggedIn" size="small" />
             <nb-text>Login </nb-text>
           </nb-button>
         </view>
@@ -94,37 +94,26 @@ export default {
       required,
     },
   },
+
   computed: {
-    logging_in() {
+    isLoggedIn() {
       return store.state.logging_in;
     },
   },
-  created() {
-    AsyncStorage.multiGet(["email"]).then((val) => {
-      if (val) {
-        this.loaded = true;
-        this.navigation.navigate("Home");
-        store.dispatch("SET_USER", { userObj: { email: val } });
-      } else {
-        this.loaded = true;
-      }
-    });
-  },
+
+  mounted() {},
   methods: {
     register() {
       this.navigation.navigate("Register");
     },
     login() {
-      if (this.email && this.password && !this.$v.email.$invalid) {
-        store.dispatch("LOGIN", {
-          userObj: { email: this.email },
-          navigate: this.navigation.navigate,
-        });
-      } else {
-        Toast.show({
-          text: "Invalid Email or Password",
-          buttonText: "Okay",
-        });
+      let email = this.email;
+      let password = this.password;
+
+      try {
+        firebase.auth().signInWithEmailAndPassword(email.trim(), password);
+      } catch (err) {
+        alert("Error: ", err.message);
       }
     },
   },

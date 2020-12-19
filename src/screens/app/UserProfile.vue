@@ -9,13 +9,13 @@
         </nb-button>
       </nb-left>
       <nb-body>
-        <nb-title>{{ shopName }}</nb-title>
+        <nb-title>Profile</nb-title>
       </nb-body>
     </nb-header>
 
     <!-- Body -->
     <nb-grid>
-      <nb-content>
+      <nb-content v-for="user in user" :key="user.uid">
         <image
           :style="{
             flex: 1,
@@ -43,24 +43,27 @@
           <nb-col>
             <view class="info">
               <text class="label">First Name</text>
-              <text class="text">{{ firstName }}</text>
+              <text class="text">{{ user.firstName }}</text>
 
               <text class="label">Last Name</text>
-              <text class="text">{{ lastName }}</text>
+              <text class="text">{{ user.lastName }}</text>
 
               <text class="label">Other Names</text>
-              <text class="text">{{ otherName }}</text>
+              <text class="text">{{ user.otherName }}</text>
             </view>
           </nb-col>
         </nb-row>
         <nb-row>
           <view class="inside-container2">
             <view class="more-info">
+              <text class="label">Phone Number</text>
+              <text class="text">{{ user.phoneNumber }}</text>
+
               <text class="label">Address</text>
-              <text class="text">{{ address }}</text>
+              <text class="text">{{ user.address }}</text>
 
               <text class="label">City</text>
-              <text class="text">{{ city }}</text>
+              <text class="text">{{ user.city }}</text>
             </view>
           </view>
         </nb-row>
@@ -72,23 +75,31 @@
 <script>
 import React from "react";
 import cardImage from "./../../../assets/tempImage4.jpg";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import store from "../../store";
+import firebase from "firebase";
 
 export default {
+  computed: {
+    shopName() {
+      return store.state.user.shopName;
+    },
+  },
   // Declare `navigation` as a prop
   props: {
     navigation: {
       type: Object,
     },
   },
+  mounted() {
+    setTimeout(() => {
+      this.listenForUser();
+    });
+  },
   data() {
     return {
       defaultColor: "#1b4f72",
-      shopName: "Earth-Clan Shop",
-      firstName: "Vue",
-      lastName: "Developer",
-      otherName: "",
-      address: "123 Ba Sing Se Street",
-      city: "Lusaka",
+      user: [],
       cardImage,
       stylesObj: {
         cardItemImage: {
@@ -100,6 +111,36 @@ export default {
   methods: {
     goBack: function () {
       this.navigation.goBack();
+    },
+    getUserInfo: function () {
+      return firebase.firestore().collection("USERS");
+    },
+    listenForUser: function () {
+      try {
+        var user = firebase.auth().currentUser;
+        this.getUserInfo()
+          .get()
+          .then((querySnapshot) => {
+            const userInfo = [];
+            querySnapshot.forEach((doc) => {
+              if (doc.id == user.uid) {
+                userInfo.push({
+                  firstName: doc.data().firstName,
+                  lastName: doc.data().lastName,
+                  otherName: doc.data().otherName,
+                  address: doc.data().address,
+                  email: doc.data().email,
+                  city: doc.data().city,
+                  phoneNumber: doc.data().phoneNumber,
+                });
+              }
+            });
+            this.user = userInfo;
+            console.log(this.user);
+          });
+      } catch (err) {
+        alert(err);
+      }
     },
   },
 };

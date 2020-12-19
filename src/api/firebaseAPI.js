@@ -50,29 +50,13 @@ class Fire {
     });
   };
 
-  signIn = async (email, password) => {
 
-    try {
-      const signedIn = await firebase.auth().signInWithEmailAndPassword(email, password);
-      console.log(signedIn);
-      if (signedIn) {
-        return signedIn.user;
-      }
-    } catch (e) {
-      console.log(e.message);
-      return {
-        errorMessage: e.message
-      }
-    }
-  }
-
-  createUser = async (firstName, lastName, otherName, address, city, shopName, email, password, avatar) => {
+  createUser = async (firstName, lastName, otherName, address, city, phoneNumber, email, password) => {
     let remoteUri = null;
-
     try {
       await firebase.auth().createUserWithEmailAndPassword(email.trim(), password);
 
-      let db = firebase.firestore().collection("users").doc(this.uid);
+      let db = firebase.firestore().collection("USERS").doc(this.uid);
 
       db.set({
         firstName: firstName,
@@ -81,21 +65,23 @@ class Fire {
         address: address,
         city: city,
         email: email,
-        avatar: null,
-        shopName: shopName,
-
+        phoneNumber: phoneNumber,
       });
-
-      if (avatar) {
-        remoteUri = await this.uploadPhotoAsync(avatar, `avatars/${this.uid}`);
-
-        db.set({ avatar: remoteUri }, { merge: true });
-      }
     } catch (error) {
       alert(error);
     }
   };
 
+  getUserByUID(UID, callback) {
+    var userRef = firebase.firestore().collection("USERS");
+    userRef.get('value', function (snapshot) {
+      if (snapshot.val() != null) {
+        callback(Object.keys(snapshot.val())[0], snapshot.val());
+      } else {
+        callback(null, null);
+      }
+    });
+  }
 
   getProductList() {
     return firebase.firestore().collection("PRODUCTS");
