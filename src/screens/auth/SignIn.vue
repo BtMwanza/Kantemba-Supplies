@@ -13,6 +13,7 @@
               placeholder="Email"
               v-model="email"
               auto-capitalize="none"
+              keyboard-type="visible-password"
               :on-blur="() => $v.email.$touch()"
             />
           </nb-item>

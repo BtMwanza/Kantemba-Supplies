@@ -64,6 +64,7 @@
               :rowSpan="5"
               bordered
               v-model="message"
+              keyboard-type="visible-password"
               placeholder="Type your enquiry here..."
             />
           </nb-form>

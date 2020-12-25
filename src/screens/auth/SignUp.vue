@@ -12,6 +12,7 @@
             <nb-input
               placeholder="First name"
               v-model="firstName"
+              keyboard-type="visible-password"
               auto-capitalize="none"
             />
           </nb-item>
@@ -21,6 +22,7 @@
             <nb-input
               placeholder="Last name"
               v-model="lastName"
+              keyboard-type="visible-password"
               auto-capitalize="none"
             />
           </nb-item>
@@ -30,6 +32,7 @@
             <nb-input
               placeholder="Other names"
               v-model="otherName"
+              keyboard-type="visible-password"
               auto-capitalize="none"
             />
           </nb-item>
@@ -39,6 +42,7 @@
             <nb-input
               placeholder="Address"
               v-model="address"
+              keyboard-type="visible-password"
               auto-capitalize="none"
             />
           </nb-item>
@@ -48,15 +52,17 @@
             <nb-input
               placeholder="City"
               v-model="city"
+              keyboard-type="visible-password"
               auto-capitalize="none"
             />
           </nb-item>
 
-          <!-- Shop name -->
+          <!-- Phone number -->
           <nb-item last>
             <nb-input
               placeholder="Phone Number"
               v-model="phoneNumber"
+              keyboard-type="visible-password"
               auto-capitalize="none"
             />
           </nb-item>
@@ -66,6 +72,7 @@
             <nb-input
               placeholder="Email"
               v-model="email"
+              keyboard-type="visible-password"
               auto-capitalize="none"
             />
           </nb-item>
