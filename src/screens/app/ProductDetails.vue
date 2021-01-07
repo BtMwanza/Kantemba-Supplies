@@ -43,7 +43,7 @@
             <nb-card-item :style="{ backgroundColor: defaultColor }">
               <nb-left>
                 <nb-text :style="{ fontSize: 20, color: '#fff', marginLeft: 0 }"
-                  >Unit price: {{ navigation.getParam("unitPrice") }}</nb-text
+                  >Unit price: {{ navigation.getParam("price") }}</nb-text
                 >
               </nb-left>
             </nb-card-item>

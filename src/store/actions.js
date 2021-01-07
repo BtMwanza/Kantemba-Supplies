@@ -15,7 +15,7 @@ export function FETCH_LIST_DATA({ commit, state }, { type }) {
         productName: doc.data().productName,
         supplierName: doc.data().supplierName,
         productImage: doc.data().productImage,
-        unitPrice: doc.data().unitPrice,
+        price: doc.data().unitPrice,
       });
     });
     state.products = productList;
@@ -65,7 +65,11 @@ export function SET_USER({ commit, state }, { userObj }) {
 
 // Add items to the cart
 export function addItem(context, product) {
-  context.commit("ADD_ITEM", product);
+  const productID = product.productID;
+  const productName = product.productName;
+  const productQuantity = product.productQuantity
+  const price = parseFloat(product.price);
+  context.commit("ADD_ITEM", ({ productQuantity, productID, productName, price }));
 }
 
 // Remove cart items

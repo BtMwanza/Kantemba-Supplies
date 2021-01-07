@@ -11,7 +11,7 @@
 
       <nb-body>
         <nb-title>My Cart</nb-title>
-        <nb-title>Total: K{{ totalPrice }}</nb-title>
+        <nb-text note class="small-text">Total: K{{ totalPrice }}</nb-text>
       </nb-body>
 
       <nb-right>
@@ -97,12 +97,12 @@ export default {
     products() {
       return store.getters.storeCart;
     },
-
     totalPrice() {
-      return store.getters.storeCart.reduce(
-        (acc, el) => acc + el.unitPrice * el.productQuantity,
-        0
-      );
+      return store.getters.storeCart
+        .reduce((acc, item) => {
+          return acc + item.price;
+        }, 0)
+        .toFixed(2);
     },
   },
 
@@ -122,16 +122,16 @@ export default {
         const newItems = [...this.products]; // clone the array
         let idx = this.products.indexOf(product);
         let currentQty = newItems[idx].productQuantity;
-        let price = newItems[idx].unitPrice;
+        let price = newItems[idx].price;
         let perQtyPrice = price / currentQty;
 
         if (action == "more") {
           newItems[idx].productQuantity = currentQty + 1;
-          newItems[idx].unitPrice += perQtyPrice;
+          newItems[idx].price += perQtyPrice;
         } else if (action == "less") {
           newItems[idx].productQuantity = currentQty > 1 ? currentQty - 1 : 1;
           // Decrease current price using the initial price
-          newItems[idx].unitPrice -= perQtyPrice;
+          newItems[idx].price -= perQtyPrice;
         }
 
         this.products = newItems; // set new state
@@ -173,4 +173,8 @@ export default {
 </script>
 
 <style>
+.small-text {
+  font-size: 12px;
+  color: whitesmoke;
+}
 </style>

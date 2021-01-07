@@ -59,27 +59,40 @@
 
         <nb-card-item>
           <nb-left><nb-text class="small-text">ITEMID</nb-text></nb-left>
-          <nb-body><nb-text class="small-text">DESCRIPTION</nb-text></nb-body>
-          <nb-right><nb-text class="small-text">AMOUNT</nb-text></nb-right>
+          <nb-body class="qty"
+            ><nb-text class="small-text">QTY</nb-text></nb-body
+          >
+          <nb-body class="description"
+            ><nb-text class="small-text">DESCRIPTION</nb-text></nb-body
+          >
+          <nb-right class="amount"
+            ><nb-text class="small-text">AMOUNT</nb-text></nb-right
+          >
         </nb-card-item>
 
         <!-- Items -->
         <nb-card-item v-for="item in record.cartRecord" :key="item.id">
           <nb-left>
-            <nb-text note class="small-text">
+            <nb-text note class="small-text" :numberOfLines="1">
               {{ item.productID }}
             </nb-text>
           </nb-left>
 
-          <nb-body>
+          <nb-body class="qty">
+            <nb-text note class="small-text">
+              {{ item.productQuantity }}
+            </nb-text>
+          </nb-body>
+
+          <nb-body class="description">
             <nb-text note class="small-text">
               {{ item.productName }}
             </nb-text>
           </nb-body>
 
-          <nb-right>
+          <nb-right class="amount">
             <nb-text note class="small-text">
-              {{ item.unitPrice }}
+              {{ item.price }}
             </nb-text>
           </nb-right>
         </nb-card-item>
@@ -111,6 +124,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import store from "./../../store";
 import { v4 as uuidv4 } from "uuid";
 import firebase from "firebase";
+import moment from "moment";
 
 export default {
   // Declare `navigation` as a prop
@@ -123,7 +137,7 @@ export default {
   mounted: function () {
     setTimeout(() => {
       this.listenForRecords();
-    }, 1000);
+    }, 2000);
   },
 
   data: function () {
@@ -139,7 +153,6 @@ export default {
     getHistory: function () {
       return firebase.firestore().collection("CART");
     },
-
     listenForRecords: function () {
       try {
         var user = firebase.auth().currentUser;
@@ -154,7 +167,7 @@ export default {
                   cartID: doc.data().cartID,
                   cartRecord: doc.data().cartRecord,
                   userID: doc.data().for,
-                  date: doc.data().date,
+                  date: moment(doc.data().date).format("lll"),
                   totalPrice: doc.data().totalPrice,
                 });
               }
@@ -166,32 +179,6 @@ export default {
         alert(err);
       }
     },
-
-    /*   handleDelete: function (product) {
-      try {
-        let idx = this.products.indexOf(product);
-        Alert.alert(
-          "Are you sure you want to delete this item from your cart?",
-          "",
-          [
-            {
-              text: "Cancel",
-              onPress: () => console.log("Cancel Pressed"),
-              style: "cancel",
-            },
-            {
-              text: "Delete",
-              onPress: () => {
-                store.dispatch("removeItem", idx);
-              },
-            },
-          ],
-          { cancelable: false }
-        );
-      } catch (error) {
-        alert(error);
-      }
-    }, */
     goBack: function () {
       this.navigation.goBack();
     },
@@ -206,5 +193,21 @@ export default {
 }
 .small-text {
   font-size: 11px;
+}
+.itemID {
+  padding-right: 10px;
+  margin-right: -80px;
+}
+.description {
+  margin-right: 5px;
+  margin-left: -10px;
+}
+.qty {
+  padding-right: 10px;
+  margin-right: -80px;
+  margin-left: 10px;
+}
+.amount {
+  margin-left: -70px;
 }
 </style>

@@ -39,7 +39,7 @@
             </touchable-opacity>
             <nb-card-item>
               <nb-left>
-                <nb-text>K{{ product.unitPrice }}</nb-text>
+                <nb-text>K{{ product.price }}</nb-text>
               </nb-left>
 
               <nb-right>
@@ -108,7 +108,7 @@ export default {
       const productName = product.productName;
       const productImage = product.productImage;
       const productDescription = product.productDescription;
-      const unitPrice = product.unitPrice;
+      const price = product.unitPrice;
       const supplierID = product.supplierID;
 
       this.navigation.navigate("ProductDetails", {
@@ -116,20 +116,9 @@ export default {
         productName: productName,
         productDescription: productDescription,
         productImage: productImage,
-        unitPrice: unitPrice,
+        price: price,
         supplierID: supplierID,
       });
-    },
-    toggleCart(product) {
-      try {
-        let idx = this.productList.indexOf(product);
-        if (product.index === idx) {
-          product.isAddedToCart = !product.isAddedToCart;
-          this.addToCart(product);
-        }
-      } catch (error) {
-        alert(error);
-      }
     },
     addToCart(product) {
       let idx = this.productList.indexOf(product);
@@ -174,7 +163,7 @@ export default {
                   productName: doc.data().productName,
                   supplierName: doc.data().supplierName,
                   productImage: doc.data().productImage,
-                  unitPrice: doc.data().unitPrice,
+                  price: doc.data().unitPrice,
                   isAddedToCart: doc.data().isAddedToCart,
                 });
               }

@@ -56,12 +56,12 @@ export default {
     products() {
       return store.getters.storeCart;
     },
-
     totalPrice() {
-      return store.getters.storeCart.reduce(
-        (acc, el) => acc + el.unitPrice * el.productQuantity,
-        0
-      );
+      return store.getters.storeCart
+        .reduce((acc, item) => {
+          return acc + item.price;
+        }, 0)
+        .toFixed(2);
     },
   },
   // Declare `navigation` as a prop
@@ -125,13 +125,17 @@ export default {
         const user = firebase.auth().currentUser;
         var uuid = uuidv4();
         const cartID = `${uuid}`;
-        firebase.firestore().collection("CART").doc().set({
-          cartID: cartID,
-          for: user.uid,
-          cartRecord: this.products,
-          totalPrice: this.totalPrice,
-          date: Date.now(),
-        });
+        firebase
+          .firestore()
+          .collection("CART")
+          .doc()
+          .set({
+            cartID: cartID,
+            for: user.uid,
+            cartRecord: this.products,
+            totalPrice: this.totalPrice(),
+            date: moment(Date.now()).format("lll"),
+          });
       } catch (error) {
         alert(error);
       }
